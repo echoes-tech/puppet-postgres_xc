@@ -88,7 +88,7 @@ limitations under the License.
 Contact
 -------
 
-<thibault.marquand@utt.fr>
+<thibault.marquand [at] utt.fr>
 
 Support
 -------
