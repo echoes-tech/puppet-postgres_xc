@@ -1,0 +1,98 @@
+#!/bin/bash
+
+DAEMONUSER="<%= @user %>"
+GTM_PROXY_DIRECTORY="<%= @home %>/<%= @gtm_proxy_directory %>"
+DATANODE_DIRECTORY="<%= @home %>/<%= @datanode_directory %>"
+COORDINATOR_DIRECTORY="<%= @home %>/<%= @coordinator_directory %>"
+
+gtm_port=<%= @gtm_port %>
+gtm_hostname=<%= @gtm_name %>
+gtm_standby_hostname=<%= @gtm_standby_name %>
+gtm_proxy_configfile="<%= @home %>/<%= @gtm_proxy_directory %>/gtm_proxy.conf"
+
+reconfigure_gtm_proxy() {
+sed -i -e "s/gtm_host\ =\ '$gtm_hostname'/gtm_host\ =\ '$gtm_standby_hostname'/" $gtm_proxy_configfile
+}
+
+wait_gtm() {
+echo "Looking for gtm up..."
+continue=1
+try=0
+while [ $continue -eq 1 ]
+do
+  port_status=`nmap $gtm_hostname -p$gtm_port | grep $gtm_port | cut -d" " -f2`
+  try=$(($try + 1))
+  if [ $port_status == 'open' ]
+  then
+    continue=0
+    echo "GTM is up."
+  else
+    # On test alors gtm standby savoir si il a pris le role du gtm
+    if [ $try -gt 5 ]; then
+      port_status=`nmap $gtm_standby_hostname -p$gtm_port | grep $gtm_port | cut -d" " -f2`
+      
+      if [ $port_status == 'open' ]; then
+        continue=0
+        echo "GTM standby took place of GTM. So I can start with him !"
+        reconfigure_gtm_proxy
+      fi
+    fi
+  fi
+  sleep 0.5
+done
+
+# Change conf file to switch gtm
+# It's wait_gtm function who detect 
+# if proxy have to switch from gtm1 to gtm2 standby (which is in fact the gtm because gtm1 doesn't start)
+
+
+}
+do_start() {
+echo "Starting GTM-proxy..."
+rm <%= @home %>/<%= @gtm_proxy_directory %>/register.node
+sudo -u $DAEMONUSER gtm_ctl start -Z gtm_proxy -D $GTM_PROXY_DIRECTORY
+if [ $? -eq 1 ]; then
+  pkill gtm_proxy
+  sudo -u $DAEMONUSER gtm_ctl start -Z gtm_proxy -D $GTM_PROXY_DIRECTORY
+fi
+echo "Starting datanode..."
+sudo -u $DAEMONUSER pg_ctl start -Z datanode -D $DATANODE_DIRECTORY
+echo "Starting coordinator..."
+sudo -u $DAEMONUSER pg_ctl start -Z coordinator -D $COORDINATOR_DIRECTORY
+.<%= @home %>/reconnect_daemon.sh &
+}
+
+do_stop () {
+sudo -u $DAEMONUSER pg_ctl stop -Z coordinator -D $COORDINATOR_DIRECTORY
+sudo -u $DAEMONUSER pg_ctl stop -Z datanode -D $DATANODE_DIRECTORY
+sudo -u $DAEMONUSER gtm_ctl stop -Z gtm_proxy -D $GTM_PROXY_DIRECTORY
+killall reconnect_daemon.sh
+}
+
+do_force_stop () {
+sudo -u $DAEMONUSER pg_ctl stop -Z coordinator -D $COORDINATOR_DIRECTORY -m immediate &
+sleep 0.2
+sudo -u $DAEMONUSER pg_ctl stop -Z datanode -D $DATANODE_DIRECTORY -m immediate &
+sleep 0.2
+sudo -u $DAEMONUSER gtm_ctl stop -Z gtm_proxy -D $GTM_PROXY_DIRECTORY -m immediate &
+}
+
+case "$1" in
+  start)
+    wait_gtm 
+    do_start
+    ;;
+  stop)
+    do_stop
+    ;;
+  restart)
+    do_stop
+    do_start
+    ;;
+  force-stop)
+    do_force_stop
+    killall postgres
+    ;;
+  *)
+    echo "Usage : $0 {start|stop|restart|force-stop}"
+esac

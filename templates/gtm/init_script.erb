@@ -1,0 +1,29 @@
+#!/bin/bash
+
+DAEMONUSER="<%= @user %>"
+DAEMONDIRECTORY="<%= @home %>/<%= @gtm_directory %>"
+
+do_start() {
+rm <%= @home %>/<%= @gtm_directory %>/register.node
+sudo -u $DAEMONUSER gtm_ctl start -Z gtm -D $DAEMONDIRECTORY
+}
+
+do_stop () {
+sudo -u $DAEMONUSER gtm_ctl stop -Z gtm -D $DAEMONDIRECTORY
+}
+
+case "$1" in
+  start|stop)
+    do_${1}
+    ;;
+  restart)
+    do_stop
+    do_start
+    ;;
+  force-stop)
+    do_stop
+    killall gtm
+    ;;
+  *)
+    echo "Usage : $0 {start|stop|restart|force-stop}"
+esac

@@ -1,0 +1,79 @@
+#!/bin/bash
+
+DAEMONUSER="<%= @user %>"
+DAEMONDIRECTORY="<%= @home %>/<%= @gtm_standby_directory %>"
+
+gtm_port=<%= @gtm_port %>
+timeToWait=20
+config_file="$DAEMONDIRECTORY/gtm.conf"
+
+## if gtm is not up, exec reconfigure_standby_to_gtm
+wait_if_gtm_alived() {
+
+time=0
+while [ $time -lt $timeToWait ]
+do
+port_status=`nmap gtm -p$gtm_port | grep $gtm_port | cut -d" " -f2`
+  if [ $port_status == 'open' ]
+  then
+    return 0
+  else
+    time=$(($time + 1))
+  fi
+  sleep 1
+done
+
+echo 1
+}
+
+do_start() {
+rm <%= @home %>/<%= @gtm_standby_directory %>/register.node
+sudo -u $DAEMONUSER gtm_ctl start -Z gtm -D $DAEMONDIRECTORY
+.<%= @home %>/promote_daemon.sh &
+}
+
+# function start when standby is teranformed in simple gtm.
+# Diff with do_start() : Don't start promote_daemon script
+do_start_gtm() {
+rm /var/lib/postgresql/gtm_standby_puppet/register.node
+sudo -u $DAEMONUSER gtm_ctl start -Z gtm -D $DAEMONDIRECTORY
+}
+
+do_stop () {
+sudo -u $DAEMONUSER gtm_ctl stop -Z gtm -D $DAEMONDIRECTORY
+killall promote_daemon.sh
+}
+
+# Change configuration from gtm standby to simple gtm
+reconfigure_standby_to_gtm() {
+
+sed -i -e '/^active_/d' $config_file 
+sed -i -e 's/STANDBY/ACT/' $config_file
+
+}
+
+case "$1" in
+  start)
+  if [ $(wait_if_gtm_alived) -eq 1 ]; then 
+    echo "GTM is not up, so I take his place. I am the GTM now !"  
+    reconfigure_standby_to_gtm
+    do_stop
+    do_start_gtm
+  else
+    do_start
+  fi
+    ;;
+  stop)
+    do_stop
+    ;;
+  restart)
+    do_stop
+    do_start
+    ;;
+  force-stop)
+    do_stop
+    killall gtm
+    ;;
+  *)
+    echo "Usage : $0 {start|stop|restart|force-stop}"
+esac

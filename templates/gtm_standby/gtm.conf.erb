@@ -1,0 +1,7 @@
+# File managed by Puppet
+nodename = '<%= @gtm_standby_name %>'
+listen_addresses = '*'
+port = <%= @gtm_port %>
+startup = STANDBY
+active_host = '<%= @gtm_hostname %>'
+active_port = <%= @gtm_port %>

@@ -1,0 +1,15 @@
+max_connections = 100
+shared_buffers = 24MB
+datestyle = 'iso, dmy'
+lc_messages = 'fr_FR.UTF-8'
+lc_monetary = 'fr_FR.UTF-8'
+lc_numeric = 'fr_FR.UTF-8'
+lc_time = 'fr_FR.UTF-8'
+default_text_search_config = 'pg_catalog.french'
+
+pooler_port = <%= @datanode_port %>
+gtm_host = '<%= @coordinator_hostname %>' 
+gtm_port = <%= @gtm_port %>
+pgxc_node_name = '<%= @coordinator_name %>'
+listen_addresses = '*'
+port = <%= @coordinator_port %>
