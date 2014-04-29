@@ -4,8 +4,8 @@
 
 1. [Overview](#overview)
 2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with [postgres_xc]](#setup)
-    * [What [postgres_xc] affects](#what-[postgres_xc]-affects)
+3. [Setup - The basics of getting started with postgres_xc](#setup)
+    * [What postgres_xc affects](#what-postgres_xc-affects)
     * [Setup requirements](#setup-requirements)
 4. [Usage - Configuration options and additional functionality](#usage)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
@@ -23,12 +23,12 @@ It adds service script and manage them.
 
 ##Setup
 
-###What [postgres_xc] affects
+###What postgres_xc affects
 
   * PG-XC configuration file
   * PG-XC service
 
-###Setup Requirements **OPTIONAL**
+###Setup Requirements
 
 You have to download and compile PG-XC from source.
   
@@ -77,7 +77,7 @@ On gtm :
     class { 'echoes_potgrexc::gtm': }
 ```
 
-### Configuring GTM standby
+### Configuring GTM standby node
 
 On gtm2 :
 
@@ -98,15 +98,11 @@ On gtm2 :
   * postgres_xc::datanode: Handles datanode process.
   * postgres_xc::gtm_proxy: Handles GTM proxy node.
 
-  * postgres_xc::coordinator: Handles coordinator process.
-  * postgres_xc::datanode: Handles datanode process.
-  * postgres_xc::gtm_proxy: Handles GTM proxy node.
-
 ###Parameters
 
 ####`user`
-   PGXC processes will be launch under this user.
-   default = postgres
+PGXC processes will be launch under this user.\n
+Default = postgres
 
 ####`group`
    user's group.
@@ -158,7 +154,7 @@ On gtm2 :
 
 ##Limitations
 
-THis module has been tested only on Debian sytems.
+This module has been tested only on Debian sytems.
 
 ##Development
 
