@@ -1,5 +1,19 @@
 {
-  "name": "echoes-postgrexc",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": "3.x"
+    }
+  ],
+  "name": "echoes-postgres_xc",
   "version": "0.1.0",
   "source": "UNKNOWN",
   "author": "ECHOES Technologies <contact@echoes-tech.com>",
@@ -18,8 +32,8 @@
   ],
   "checksums": {
     "LICENSE": "d8cc5723b16a10cf5bc133012f9a74ee",
-    "Modulefile": "9024a178779d43b1805657b11fab48b5",
-    "README.md": "e84846e15638e7ac36afeea0e8d6c3e6",
+    "Modulefile": "ff0368cb55f21dcee22821a672772024",
+    "README.md": "2fb116ac8881923fff13fd3b4350658c",
     "README.md.bak": "5be6a2bcf68ee2a70b3f41f1da7900b5",
     "manifests/coordinator.pp": "8f342e3b96cd66f83036517d7f4ed5dc",
     "manifests/database.pp": "d988f7a279ed12074fa021890f2e1783",
