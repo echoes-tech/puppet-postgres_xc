@@ -71,7 +71,7 @@ On gtm2 :
 License
 -------
 
-Copyright (C) 2014 Echoes Technologies <contact@echoes-tech.fr>
+Copyright (C) 2014 Echoes Technologies <contact@echoes-tech.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

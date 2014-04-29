@@ -1,4 +1,4 @@
-# == Class: postgrexc::gtm_standby 
+# == Class: postgres_xc::gtm_standby 
 # 
 # Initialise GTM standby node if it was never done (based on $::gtm_standby_directory/gtm.conf existence)
 # Then configure GTM proxy
@@ -18,12 +18,12 @@
 #   Used in templates files
 #   Default : $::hostname
 #
-class echoes_postgrexc::gtm_standby
+class postgres_xc::gtm_standby
 (
   $gtm_standby_name       = $::hostname,
   $gtm_standby_hostname   = $::hostname,
 )
-inherits echoes_postgrexc::params 
+inherits postgres_xc::params 
 {
 
 exec { "sudo -u ${user} initgtm -Z gtm -D ${home}/${gtm_standby_directory}":
@@ -38,14 +38,14 @@ file { "${home}/${gtm_standby_directory}/gtm.conf":
   owner     => $user,
   group     => $group,
   mode      => '0640',
-  content   => template('echoes_postgrexc/gtm_standby/gtm.conf.erb'),
+  content   => template('postgres_xc/gtm_standby/gtm.conf.erb'),
   }->
 file { '/etc/init.d/gtm_standby':
   ensure    => 'present',
   owner     => 'root',
   group     => 'root',
   mode      => '0755',
-  content   => template('echoes_postgrexc/gtm_standby/init_script.erb'),
+  content   => template('postgres_xc/gtm_standby/init_script.erb'),
   }->
 
 
@@ -57,7 +57,7 @@ file { "${home}/promote_daemon.sh":
   owner     => $user,
   group     => $group,
   mode      => '0750',
-  content   => template('echoes_postgrexc/gtm_standby/promote_daemon.sh.erb'),
+  content   => template('postgres_xc/gtm_standby/promote_daemon.sh.erb'),
   }->
 package { 'nmap':
   ensure    => 'present',

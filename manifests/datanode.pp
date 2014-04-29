@@ -1,4 +1,4 @@
-# == Class: postgrexc::datanode
+# == Class: postgres_xc::datanode
 #
 # Initialise datanode node if it was never done (based on $::datanode_directory/postgresql.conf existence)
 # Then configure datanode
@@ -12,14 +12,14 @@
 # [*datanode_hostname*]
 #   Hostname of datanode node
 #   Default : ${::hostname}
-class echoes_postgrexc::datanode
+class postgres_xc::datanode
 
 (
 $datanode_name      = "${::hostname}_datanode",
 $datanode_hostname  = $::hostname,
 )
 
-inherits echoes_postgrexc::params  {
+inherits postgres_xc::params  {
 
 exec { 'initialisation datanode':
   command => "sudo -u ${user} initdb --nodename=${datanode_name} -D ${home}/${datanode_directory}",
@@ -35,7 +35,7 @@ file { 'datanode postgresql.conf':
   owner     => $user,
   group     => $group,
   mode      => '0640',
-  content   => template('echoes_postgrexc/datanode/postgresql.conf.erb'),
+  content   => template('postgres_xc/datanode/postgresql.conf.erb'),
   }->
 
 file { 'datanode pg_hba.conf':
@@ -44,6 +44,6 @@ file { 'datanode pg_hba.conf':
   owner     => $user,
   group     => $group,
   mode      => '0640',
-  content   => template('echoes_postgrexc/datanode/pg_hba.conf.erb'),
+  content   => template('postgres_xc/datanode/pg_hba.conf.erb'),
   }
 }

@@ -1,4 +1,4 @@
-# == Class: postgrexc::gtm_proxy 
+# == Class: postgres_xc::gtm_proxy 
 # 
 # Initialise GTM proxy node if it was never done (based on $::gtm_proxy_directory/gtm_proxy.conf existence)
 # Then configure GTM proxy
@@ -10,11 +10,11 @@
 #   Used in templates files
 #   Default : "${::hostname}_gtm_proxy"
 # 
-class echoes_postgrexc::gtm_proxy
+class postgres_xc::gtm_proxy
 (
   $gtm_proxy_name = "${::hostname}_gtm_proxy",
 )
-inherits echoes_postgrexc::params {
+inherits postgres_xc::params {
 
 exec { 'initialisation gtm_proxy':
   command => "sudo -u ${user} initgtm -Z gtm_proxy -D ${home}/${gtm_proxy_directory}",
@@ -29,7 +29,7 @@ file { "${home}/${gtm_proxy_directory}/gtm_proxy.conf":
   owner     => $user,
   group     => $group,
   mode      => '0640',
-  content   => template('echoes_postgrexc/gtm_proxy/gtm_proxy.conf.erb'),
+  content   => template('postgres_xc/gtm_proxy/gtm_proxy.conf.erb'),
   }->
 
 package { 'nmap':
@@ -41,7 +41,7 @@ file { "${home}/reconnect_daemon.sh":
   owner     => $user,
   group     => $group,
   mode      => '0750',
-  content   => template('echoes_postgrexc/gtm_proxy/reconnect_daemon.sh.erb'),
+  content   => template('postgres_xc/gtm_proxy/reconnect_daemon.sh.erb'),
   }->
 
 exec { 'reconnect_daemon health check du GTM':

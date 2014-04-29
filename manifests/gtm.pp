@@ -1,4 +1,4 @@
-# == Class: postgrexc::gtm 
+# == Class: postgres_xc::gtm 
 # 
 # Initialise GTM node if it was never done (based on $::gtm_directory/gtm.conf existence)
 # Then configure GTM
@@ -16,12 +16,12 @@
 #   Used in templates files
 #   Default : $::hostname
 #
-class echoes_postgrexc::gtm
+class postgres_xc::gtm
 (
   $gtm_name       = $::hostname,
   $gtm_hostname   = $::hostname,
 )
-inherits echoes_postgrexc::params {
+inherits postgres_xc::params {
 
 exec { 'Initialisation GTM':
   command => "sudo -u ${user} initgtm -Z gtm -D ${home}/${gtm_directory}",
@@ -36,7 +36,7 @@ file { "${home}/${gtm_directory}/gtm.conf":
   owner     => $user,
   group     => $group,
   mode      => '0640',
-  content   => template('echoes_postgrexc/gtm/gtm.conf.erb'),
+  content   => template('postgres_xc/gtm/gtm.conf.erb'),
   require   => Exec['Initialisation GTM']
   }
 
@@ -45,7 +45,7 @@ file { '/etc/init.d/gtm':
   owner     => 'root',
   group     => 'root',
   mode      => '0755',
-  content   => template('echoes_postgrexc/gtm/init_script.erb'),
+  content   => template('postgres_xc/gtm/init_script.erb'),
   }
 
 service { 'gtm':

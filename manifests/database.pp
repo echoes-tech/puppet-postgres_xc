@@ -1,4 +1,4 @@
-# == Class: postgrexc::database
+# == Class: postgres_xc::database
 #
 # Regroup datanode, coordinator and GTM proxy on one node
 # Installs init script, start the service
@@ -9,21 +9,21 @@
 # [*other_database_hostname*]
 #   Hostname of the second database
 #   No default value
-class echoes_postgrexc::database
+class postgres_xc::database
 (
 $other_database_hostname   = '',
 )
-inherits echoes_postgrexc::params {
-  require echoes_postgrexc::datanode
-  require echoes_postgrexc::coordinator
-  require echoes_postgrexc::gtm_proxy
+inherits postgres_xc::params {
+  require postgres_xc::datanode
+  require postgres_xc::coordinator
+  require postgres_xc::gtm_proxy
 
 file { '/etc/init.d/database':
   ensure    => 'present',
   owner     => 'root',
   group     => 'root',
   mode      => '0755',
-  content   => template('echoes_postgrexc/init_main_node.sh.erb'),
+  content   => template('postgres_xc/init_main_node.sh.erb'),
   }->
 
 service { 'database':

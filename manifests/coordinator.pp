@@ -1,4 +1,4 @@
-# == Class: postgrexc::coordinator 
+# == Class: postgres_xc::coordinator 
 # 
 # Initialise coordinator node if it was never done (based on $::coordinator_directory/postgresql.conf existence)
 # Then configure coordinator
@@ -12,14 +12,14 @@
 # [*coordinator_hostname*]
 #   Hostname of coordinator node
 #   Default : ${::hostname}
-class echoes_postgrexc::coordinator
+class postgres_xc::coordinator
 
 (
 $coordinator_name     = "${::hostname}_coord",
 $coordinator_hostname = $::hostname
 )
 
-inherits echoes_postgrexc::params {
+inherits postgres_xc::params {
 
 exec { 'initialisation coordinator':
   command => "/usr/bin/sudo -u ${user} initdb --nodename=${coordinator_name} -D ${home}/${coordinator_directory}",
@@ -34,7 +34,7 @@ file { 'coordinator postgresql.conf':
   owner     => $user,
   group     => $group,
   mode      => '0640',
-  content   => template('echoes_postgrexc/coordinator/postgresql.conf.erb'),
+  content   => template('postgres_xc/coordinator/postgresql.conf.erb'),
   }->
 
 file { 'coord pg_hba.conf':
@@ -43,7 +43,7 @@ file { 'coord pg_hba.conf':
   owner     => $user,
   group     => $group,
   mode      => '0640',
-  content   => template('echoes_postgrexc/coordinator/pg_hba.conf.erb'),
+  content   => template('postgres_xc/coordinator/pg_hba.conf.erb'),
   require   => Exec ['initialisation coordinator'],
   }
 }
