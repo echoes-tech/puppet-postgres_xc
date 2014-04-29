@@ -1,4 +1,4 @@
-name    'echoes-postgrexc'
+name    'echoes-postgres_xc'
 version '0.1.0'
 source 'UNKNOWN'
 author 'ECHOES Technologies <contact@echoes-tech.com>'
