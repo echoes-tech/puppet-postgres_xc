@@ -1,0 +1,46 @@
+{
+  "name": "echoes-postgrexc",
+  "version": "0.1.0",
+  "source": "UNKNOWN",
+  "author": "ECHOES Technologies <contact@echoes-tech.com>",
+  "license": "Apache License, Version 2.0",
+  "summary": "Postgres-XC Module",
+  "description": "Configure a cluster with 2 database, 1 GTM and 1 GTM standby. Also add some bash script for high availability",
+  "project_page": "https://github.com/echoes-tech/puppet-postgres_xc",
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 0.1.6"
+    }
+  ],
+  "types": [
+
+  ],
+  "checksums": {
+    "LICENSE": "d8cc5723b16a10cf5bc133012f9a74ee",
+    "Modulefile": "9024a178779d43b1805657b11fab48b5",
+    "README.md": "17f71525d04f31140c3dddf2d1afb258",
+    "README.md.bak": "5be6a2bcf68ee2a70b3f41f1da7900b5",
+    "manifests/coordinator.pp": "8f342e3b96cd66f83036517d7f4ed5dc",
+    "manifests/database.pp": "d988f7a279ed12074fa021890f2e1783",
+    "manifests/datanode.pp": "14ef2b9de40485d3962bcb5e356065a3",
+    "manifests/gtm.pp": "e0920a5df03f8e0d4adf30b75ef1d88e",
+    "manifests/gtm_proxy.pp": "a4feaff9b1613afc9cd49316a5326f8e",
+    "manifests/gtm_standby.pp": "1a282372b6018c105a3f1062fd4f7d37",
+    "manifests/params.pp": "a8c8f6d2af07d4b517015108a704e5fd",
+    "spec/spec_helper.rb": "a55d1e6483344f8ec6963fcb2c220372",
+    "templates/coordinator/pg_hba.conf.erb": "22058f721ec591f16132c42c1add17f6",
+    "templates/coordinator/postgresql.conf.erb": "9b8d26ea5b60a0265a63b377cb51dff5",
+    "templates/datanode/pg_hba.conf.erb": "22058f721ec591f16132c42c1add17f6",
+    "templates/datanode/postgresql.conf.erb": "20ec84cc6bce4f90ab4852404a2f0456",
+    "templates/gtm/gtm.conf.erb": "f03146ef16a2a7ee7345ae26f99a1501",
+    "templates/gtm/init_script.erb": "b054c3a09edf3cb9a0bed79d8eee8011",
+    "templates/gtm_proxy/gtm_proxy.conf.erb": "11967e77ece206071244c31af217071b",
+    "templates/gtm_proxy/reconnect_daemon.sh.erb": "f888ac07f27201de9fedf6de0250bd11",
+    "templates/gtm_standby/gtm.conf.erb": "fecc06e516b5a0cb6283b4894642e058",
+    "templates/gtm_standby/init_script.erb": "af56b143b042f6563a5c5277d47ed41e",
+    "templates/gtm_standby/promote_daemon.sh.erb": "dac754c88753b22ebb6552f8e9097b51",
+    "templates/init_main_node.sh.erb": "d5d49476e62fd01a040d22b69529df58",
+    "tests/init.pp": "1d1e036308c1c257079e0747e8acd448"
+  }
+}
