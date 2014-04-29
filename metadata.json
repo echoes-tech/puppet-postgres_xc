@@ -19,7 +19,7 @@
   "checksums": {
     "LICENSE": "d8cc5723b16a10cf5bc133012f9a74ee",
     "Modulefile": "9024a178779d43b1805657b11fab48b5",
-    "README.md": "17f71525d04f31140c3dddf2d1afb258",
+    "README.md": "e84846e15638e7ac36afeea0e8d6c3e6",
     "README.md.bak": "5be6a2bcf68ee2a70b3f41f1da7900b5",
     "manifests/coordinator.pp": "8f342e3b96cd66f83036517d7f4ed5dc",
     "manifests/database.pp": "d988f7a279ed12074fa021890f2e1783",
@@ -27,7 +27,7 @@
     "manifests/gtm.pp": "e0920a5df03f8e0d4adf30b75ef1d88e",
     "manifests/gtm_proxy.pp": "a4feaff9b1613afc9cd49316a5326f8e",
     "manifests/gtm_standby.pp": "1a282372b6018c105a3f1062fd4f7d37",
-    "manifests/params.pp": "a8c8f6d2af07d4b517015108a704e5fd",
+    "manifests/params.pp": "167c8136f7298d0f0d10701a9d0861b9",
     "spec/spec_helper.rb": "a55d1e6483344f8ec6963fcb2c220372",
     "templates/coordinator/pg_hba.conf.erb": "22058f721ec591f16132c42c1add17f6",
     "templates/coordinator/postgresql.conf.erb": "9b8d26ea5b60a0265a63b377cb51dff5",
