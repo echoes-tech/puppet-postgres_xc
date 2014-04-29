@@ -1,5 +1,4 @@
-
-# == Class: postgres_xc
+# == Class: postgres_xc::params
 #
 # Module to configure Postgre-xc replication based on PostgreSQL.
 # This module do not handle with the compilation of PGXC.
