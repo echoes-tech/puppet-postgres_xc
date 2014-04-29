@@ -43,6 +43,8 @@ GTM and GTM standby has to be installed on two other machines.
 
 I use "database" to indicate the node with coordinator, datanode and GTM proxy.
 
+For more information, you should read [official PG-XC tutorial](http://postgresxc.wikia.com/wiki/Real_Server_configuration)
+
 ##Usage
 
 ### Configuring database node
@@ -158,3 +160,4 @@ This module has been tested only on Debian sytems.
 
 ##Development
 
+Bug can be reported on [Github issues tracker](https://github.com/echoes-tech/puppet-postgres_xc/issues)
