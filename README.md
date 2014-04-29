@@ -10,17 +10,17 @@
 4. [Usage - Configuration options and additional functionality](#usage)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
+6. [Development - How to contribute to the module](#development)
 
 ##Overview
 
-Postgres-XC module. Configure a basic cluster and manage Postgres-XC service.
+Postgres-XC (PG-XC) module. Configures a basic cluster and manages PG-XC service.
 
 ##Module Description
 
-This module do not install postgres-XC. It configure a cluster on Debian system.
-It adds service script and manage them.    
-It adds also bash scripts which allow high availability.
+This module does not install PG-XC. It configures a cluster on Debian system.
+It adds service script.    
+It adds bash scripts enabling high availability.
 
 ##Setup
 
@@ -31,20 +31,20 @@ It adds also bash scripts which allow high availability.
 
 ###Setup Requirements
 
-You have to download and compile PG-XC from source.
+PG-XC should be downloaded and compiled from source.
   
-Postgres-XC configure a cluster so it needs to be declare on many nodes.
+PG-XC configures a cluster so it needs to be declared on many nodes.
 
-To achieve this tutorial it supposed you get 4 machines.
-There hostname are database1, database2, gtm and gtm2.
-We are going to install GTM standby on gtm2
+This tutorial/module is designed for a 4 machines environment.
+The 4 hostnames are database1, database2, gtm and gtm2.
+GTM standby is installed on gtm2
 
-To get High Availability Postgres-xc advise to install datanode, coordinator and gtm proxy process on the same server.
-GTM and GTM standby has to be installed on two other machines.
+To get High Availability the Postgres-xc documentation advises to install datanode, coordinator and gtm proxy process on the same server.
+GTM and GTM standby have to be installed on two other machines.
 
 I use "database" to indicate the node with coordinator, datanode and GTM proxy.
 
-For more information, you should read [official PG-XC tutorial](http://postgresxc.wikia.com/wiki/Real_Server_configuration). This module configure the same cluster with a GTM standby. [(GTM standby doc)](http://postgresxc.wikia.com/wiki/GTM_Standby_Configuration)
+For more information, you should read [official PG-XC tutorial](http://postgresxc.wikia.com/wiki/Real_Server_configuration). This module configures the same cluster with a GTM standby. [(GTM standby doc)](http://postgresxc.wikia.com/wiki/GTM_Standby_Configuration)
 
 ##Usage
 
@@ -104,53 +104,53 @@ On gtm2 :
 ###Parameters
 
 ####`user`
-PGXC processes will be launch under this user.\n
-Default = postgres
+   PG-XC processes will be launched under this user.
+   default : postgres
 
 ####`group`
-   user's group.
+   User's group.
    default : postgres
 
 ####`home`
    User's home directory.
 
 ####`gtm_port`
-   listening port for gtm process.
+   Listening port for gtm process.
 
 ####`gtm_proxy_port`
-   listening port for gtm_proxy process.
-   default = 7777
+   Listening port for gtm_proxy process.
+   default : 7777
 ####`datanode_port`
    Listening port of datanode process.
-  default = 5555
+   default : 5555
 
 ####`coordinator_port`
    Listening port for coordinator process.
-   Default = 5432 (default postgre port)
+   default : 5432 (default postgre port)
 
 ####`gtm_directory`
    Directory where gtm will be initialise.
-   Default = "$home/gtm"
+   default : "$home/gtm"
 
 ####`datanode_directory`
-   Directory where datanode will be initialise.
-   Default = "$home/datanode"
+   Directory where datanode will be initialised.
+   default : "$home/datanode"
 
 ####`coordinator_directory`
-   Directory where coordinator will be initialise.
-   Default = "$home/coordinator"
+   Directory where coordinator will be initialised.
+   default : "$home/coordinator"
 
 ####`gtm_proxy_directory`
-   Directory where gtm proxy will be initialise.
-   Default = "$home/gtm_proxy"
+   Directory where gtm proxy will be initialised.
+   default : "$home/gtm_proxy"
 
 ####`gtm_standby_directory`
-   Directory where gtm standby will be initialise.
-   Default = "$home/gtm_standby"
+   Directory where gtm standby will be initialised.
+   default : "$home/gtm_standby"
 
 ####`gtm_name`
    Name of GTM node in configuration file.
-   Default : gtm
+   default : gtm
 
 ####`gtm_standby_name`
    Name of GTM standby node in configuration file.
