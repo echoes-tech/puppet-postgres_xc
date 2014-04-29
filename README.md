@@ -54,7 +54,7 @@ On database1 :
 
 ```puppet
 
-    class { 'echoes_potgrexc::database': 
+    class { 'postgres_xc::database': 
       other_database_hostname => 'database2'  
       gtm_standby_name        => 'gtm2'
       gtm_name                => 'gtm'
@@ -65,7 +65,7 @@ On database2 :
 
 ```puppet
 
-    class { 'echoes_potgrexc::database':
+    class { 'postgres_xc::database':
       other_database_hostname => 'database1'
       gtm_standby_name        => 'gtm2'
       gtm_name                => 'gtm'
@@ -77,7 +77,7 @@ On gtm :
 
 ```puppet
 
-    class { 'echoes_potgrexc::gtm': }
+    class { 'postgres_xc::gtm': }
 ```
 
 ### Configuring GTM standby node
@@ -86,7 +86,7 @@ On gtm2 :
 
 ```puppet
 
-    class { 'echoes_potgrexc::gtm': }
+    class { 'postgres_xc::gtm': }
 ```
 
 ##Reference
