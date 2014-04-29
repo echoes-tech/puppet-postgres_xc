@@ -44,7 +44,7 @@ GTM and GTM standby has to be installed on two other machines.
 
 I use "database" to indicate the node with coordinator, datanode and GTM proxy.
 
-For more information, you should read [official PG-XC tutorial](http://postgresxc.wikia.com/wiki/Real_Server_configuration). This module configure the same cluster.
+For more information, you should read [official PG-XC tutorial](http://postgresxc.wikia.com/wiki/Real_Server_configuration). This module configure the same cluster with a GTM standby. \([GTM standby doc]\)(http://postgresxc.wikia.com/wiki/GTM_Standby_Configuration)
 
 ##Usage
 
