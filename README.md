@@ -20,6 +20,7 @@ Postgres-XC module. Configure a basic cluster and manage Postgres-XC service.
 
 This module do not install postgres-XC. It configure a cluster on Debian system.
 It adds service script and manage them.    
+It adds also bash scripts which allow high availability.
 
 ##Setup
 
@@ -43,7 +44,7 @@ GTM and GTM standby has to be installed on two other machines.
 
 I use "database" to indicate the node with coordinator, datanode and GTM proxy.
 
-For more information, you should read [official PG-XC tutorial](http://postgresxc.wikia.com/wiki/Real_Server_configuration)
+For more information, you should read [official PG-XC tutorial](http://postgresxc.wikia.com/wiki/Real_Server_configuration). This module configure the same cluster.
 
 ##Usage
 
