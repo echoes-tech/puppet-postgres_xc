@@ -96,7 +96,7 @@ On gtm2 :
 
   * postgres_xc::coordinator: Handles coordinator process.
   * postgres_xc::datanode: Handles datanode process.
-  * postgres_xc::gtm_proxy: Handles GTM proxy node.
+  * postgres_xc::gtm_proxy: Handles GTM proxy process.
 
 ###Parameters
 
