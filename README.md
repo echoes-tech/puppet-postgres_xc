@@ -1,31 +1,51 @@
-# postgrexc
+#postgres-xc
 
-This is the postgrexc module.
-It doesn't install Postgre-xc : you have to compile it your self.
-Configure a database cluster with 2 database, 1 GTM and 1 GTM standby
-To get more information : [Official postgre-xc wiki](http://postgresxc.wikia.com/wiki/Real_Server_configuration).
-This module install the same configuration as this tutorial.
+####Table of Contents
 
-## Using postgre-xc
+1. [Overview](#overview)
+2. [Module Description - What the module does and why it is useful](#module-description)
+3. [Setup - The basics of getting started with [postgres_xc]](#setup)
+    * [What [postgres_xc] affects](#what-[postgres_xc]-affects)
+    * [Setup requirements](#setup-requirements)
+4. [Usage - Configuration options and additional functionality](#usage)
+5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+5. [Limitations - OS compatibility, etc.](#limitations)
+6. [Development - Guide for contributing to the module](#development)
 
-### Getting Started
+##Overview
 
-First of all, you must download and compile Postgre-xc.
-If you use custom parameters for configure script, take care to report this configuration on the module parameters : user, group, home
-The default value of the module are the default value of configure script.
+Postgres-XC module. Configure a basic cluster and manage Postgres-XC service.
 
-Then, install this module.
-```bash
-puppet module install echoes/postgrexc
-```
+##Module Description
 
-Postgre-xc advise to install datanode, coordinator and gtm proxy process on the same server. GTM on an other one and then, GTM standby on a last one.
-`echoes\_postgrexc::database` class include datanode, coordinator and GTM proxy. It has to be installed on the database servers.
+This module do not install postgres-XC. It configure a cluster on Debian system.
+It adds service script and manage them.    
 
-This tutorial supposed you have got 4 machines. There hostname are database1, database2, gtm and gtm2.
+##Setup
+
+###What [postgres_xc] affects
+
+  * PG-XC configuration file
+  * PG-XC service
+
+###Setup Requirements **OPTIONAL**
+
+You have to download and compile PG-XC from source.
+  
+Postgres-XC configure a cluster so it needs to be declare on many nodes.
+
+To achieve this tutorial it supposed you get 4 machines.
+There hostname are database1, database2, gtm and gtm2.
 We are going to install GTM standby on gtm2
 
-#### Configuring database node
+To get High Availability Postgres-xc advise to install datanode, coordinator and gtm proxy process on the same server.
+GTM and GTM standby has to be installed on two other machines.
+
+I use "database" to indicate the node with coordinator, datanode and GTM proxy.
+
+##Usage
+
+### Configuring database node
 
 On database1 :
 
@@ -48,7 +68,7 @@ On database2 :
       gtm_name                => 'gtm'
     }
 ```
-#### Configuring GTM node
+### Configuring GTM node
 
 On gtm :
 
@@ -57,7 +77,7 @@ On gtm :
     class { 'echoes_potgrexc::gtm': }
 ```
 
-#### Configuring GTM standby
+### Configuring GTM standby
 
 On gtm2 :
 
@@ -66,30 +86,79 @@ On gtm2 :
     class { 'echoes_potgrexc::gtm': }
 ```
 
-###  
+##Reference
 
-License
--------
+###Classes
 
-Copyright (C) 2014 Echoes Technologies <contact@echoes-tech.com>
+  * postgres_xc::database: Handles database node.
+  * postgres_xc::gtm: Handles GTM node.
+  * postgres_xc::gtm_standby: Handles GTM standby node.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+  * postgres_xc::coordinator: Handles coordinator process.
+  * postgres_xc::datanode: Handles datanode process.
+  * postgres_xc::gtm_proxy: Handles GTM proxy node.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+  * postgres_xc::coordinator: Handles coordinator process.
+  * postgres_xc::datanode: Handles datanode process.
+  * postgres_xc::gtm_proxy: Handles GTM proxy node.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+###Parameters
 
-Contact
--------
+####`user`
+   PGXC processes will be launch under this user.
+   default = postgres
 
-<thibault.marquand [at] utt.fr>
+####`group`
+   user's group.
+   default : postgres
 
-Support
--------
+####`home`
+   User's home directory.
+
+####`gtm_port`
+   listening port for gtm process.
+
+####`gtm_proxy_port`
+   listening port for gtm_proxy process.
+   default = 7777
+####`datanode_port`
+   Listening port of datanode process.
+  default = 5555
+
+####`coordinator_port`
+   Listening port for coordinator process.
+   Default = 5432 (default postgre port)
+
+####`gtm_directory`
+   Directory where gtm will be initialise.
+   Default = "$home/gtm"
+
+####`datanode_directory`
+   Directory where datanode will be initialise.
+   Default = "$home/datanode"
+
+####`coordinator_directory`
+   Directory where coordinator will be initialise.
+   Default = "$home/coordinator"
+
+####`gtm_proxy_directory`
+   Directory where gtm proxy will be initialise.
+   Default = "$home/gtm_proxy"
+
+####`gtm_standby_directory`
+   Directory where gtm standby will be initialise.
+   Default = "$home/gtm_standby"
+
+####`gtm_name`
+   Name of GTM node in configuration file.
+   Default : gtm
+
+####`gtm_standby_name`
+   Name of GTM standby node in configuration file.
+
+##Limitations
+
+THis module has been tested only on Debian sytems.
+
+##Development
 
