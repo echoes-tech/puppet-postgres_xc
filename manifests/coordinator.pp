@@ -22,7 +22,7 @@ $coordinator_hostname = $::hostname
 inherits postgres_xc::params {
 
 exec { 'initialisation coordinator':
-  command => "/usr/bin/sudo -u ${user} initdb --nodename=${coordinator_name} -D ${home}/${coordinator_directory}",
+  command => "/usr/bin/sudo -u ${super_user} initdb --nodename=${coordinator_name} -D ${home}/${coordinator_directory}",
   unless  => "test -s ${home}/${coordinator_directory}/postgresql.conf",
   path    => [
     '/usr/local/bin',
@@ -31,7 +31,7 @@ exec { 'initialisation coordinator':
 file { 'coordinator postgresql.conf':
   ensure    => 'present',
   path      => "${home}/${coordinator_directory}/postgresql.conf",
-  owner     => $user,
+  owner     => $super_user,
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/coordinator/postgresql.conf.erb'),
@@ -40,7 +40,7 @@ file { 'coordinator postgresql.conf':
 file { 'coord pg_hba.conf':
   ensure    => 'present',
   path      => "${home}/${coordinator_directory}/pg_hba.conf",
-  owner     => $user,
+  owner     => $super_user,
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/coordinator/pg_hba.conf.erb'),

@@ -104,7 +104,10 @@
 #
 # Copyright 2014 Echoes Technologies.
 class postgres_xc::params {
-  $user                   = 'postgres'
+  $user                   = 'echoes'
+  $password               = 'echoes'
+  $database_name          = 'echoes'
+  $super_user             = 'postgres'
   $group                  = 'postgres'
   $home                   = '/var/lib/postgresql'
   $network_address        = '192.168.0.0/24'

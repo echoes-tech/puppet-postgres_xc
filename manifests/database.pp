@@ -12,6 +12,10 @@
 class postgres_xc::database
 (
 $other_database_hostname   = '',
+$database_name             = $postgres_xc::params::database_name,
+$super_user                = $postgres_xc::params::super_user,
+$user                      = $postgres_xc::params::user,
+$password                  = $postgres_xc::params::password,
 )
 inherits postgres_xc::params {
   require postgres_xc::datanode
@@ -43,11 +47,27 @@ exec { 'sleep 5':
   }->
 
 exec { 'initialisation cluster in DB':
-  unless  => "psql -U ${user} -h ${datanode::datanode_hostname} -c \"select node_name from pgxc_node;\" | grep datanode",
-  command => "psql -U ${user} -h ${datanode::datanode_hostname} -c \"CREATE NODE ${other_database_hostname}_coord WITH (TYPE = 'coordinator', HOST = '${other_database_hostname}', PORT = ${coordinator_port}); CREATE NODE ${datanode::datanode_name} WITH (TYPE = 'datanode', HOST = '${datanode::datanode_hostname}', PORT = ${datanode_port} ); CREATE NODE ${other_database_hostname}_datanode WITH (TYPE = 'datanode', HOST = '${other_database_hostname}', PORT = ${datanode_port});\"",
+  unless  => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"select node_name from pgxc_node;\" | grep datanode",
+  command => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"CREATE NODE ${other_database_hostname}_coord WITH (TYPE = 'coordinator', HOST = '${other_database_hostname}', PORT = ${coordinator_port}); CREATE NODE ${datanode::datanode_name} WITH (TYPE = 'datanode', HOST = '${datanode::datanode_hostname}', PORT = ${datanode_port} ); CREATE NODE ${other_database_hostname}_datanode WITH (TYPE = 'datanode', HOST = '${other_database_hostname}', PORT = ${datanode_port});\"",
   path    => [
     '/usr/local/bin',
     '/usr/bin',
+    '/bin']
+  }->
+
+exec { 'createuser':
+  command => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"create user ${user} with password '${password}';\"",
+  unless  => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"select * from pg_roles;\" | grep ${user}",
+  path    => [
+    '/usr/local/bin',
+    '/bin']
+  }->
+
+exec { 'createdb':
+  command => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"create database ${database_name};\"",
+  unless  => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"select * from pg_database;\" | grep ${database_name}",
+  path    => [
+    '/usr/local/bin',
     '/bin']
   }
 }

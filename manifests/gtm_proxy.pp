@@ -17,7 +17,7 @@ class postgres_xc::gtm_proxy
 inherits postgres_xc::params {
 
 exec { 'initialisation gtm_proxy':
-  command => "sudo -u ${user} initgtm -Z gtm_proxy -D ${home}/${gtm_proxy_directory}",
+  command => "sudo -u ${super_user} initgtm -Z gtm_proxy -D ${home}/${gtm_proxy_directory}",
   unless  => "/usr/bin/test -s ${home}/${gtm_proxy_directory}/gtm_proxy.conf",
   path    => [
     '/usr/local/bin',
@@ -26,7 +26,7 @@ exec { 'initialisation gtm_proxy':
 
 file { "${home}/${gtm_proxy_directory}/gtm_proxy.conf":
   ensure    => 'present',
-  owner     => $user,
+  owner     => $super_user,
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/gtm_proxy/gtm_proxy.conf.erb'),
@@ -38,7 +38,7 @@ package { 'nmap':
 
 file { "${home}/reconnect_daemon.sh":
   ensure    => 'present',
-  owner     => $user,
+  owner     => $super_user,
   group     => $group,
   mode      => '0750',
   content   => template('postgres_xc/gtm_proxy/reconnect_daemon.sh.erb'),

@@ -22,8 +22,8 @@ $datanode_hostname  = $::hostname,
 inherits postgres_xc::params  {
 
 exec { 'initialisation datanode':
-  command => "sudo -u ${user} initdb --nodename=${datanode_name} -D ${home}/${datanode_directory}",
-  unless  => "/usr/bin/test -s ${home}/${datanode_directory}/postgresql.conf",
+  command => "sudo -u ${super_user} initdb --nodename=${datanode_name} -D ${home}/${datanode_directory}",
+  unless  => "test -s ${home}/${datanode_directory}/postgresql.conf",
   path    => [
     '/usr/local/bin',
     '/usr/bin']
@@ -32,7 +32,7 @@ exec { 'initialisation datanode':
 file { 'datanode postgresql.conf':
   ensure    => 'present',
   path      => "${home}/${datanode_directory}/postgresql.conf",
-  owner     => $user,
+  owner     => $super_user,
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/datanode/postgresql.conf.erb'),
@@ -41,7 +41,7 @@ file { 'datanode postgresql.conf':
 file { 'datanode pg_hba.conf':
   ensure    => 'present',
   path      => "${home}/${datanode_directory}/pg_hba.conf",
-  owner     => $user,
+  owner     => $super_user,
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/datanode/pg_hba.conf.erb'),

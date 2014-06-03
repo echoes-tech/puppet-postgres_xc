@@ -4,8 +4,13 @@
 # "local" is for Unix domain socket connections only
 local   all             all                                     trust
 # IPv4 local connections:
-host    all             all             127.0.0.1/32            trust
-host    all             all             samenet                 trust
+host    all             all           127.0.0.1/32            trust
 host    all             all             <%= @network_address %>     trust
 # IPv6 local connections:
-host    all             all             ::1/128                 trust
+host    all             all           ::1/128                 trust
+host    echoes          echoes           107.178.221.226/32      md5 # gui
+host    echoes          echoes           23.236.62.31/32         md5 # api
+host    all             all              92.245.142.221/32       md5 # poste-local
+host    echoes          echoes           23.251.158.225/32       md5 # rsyslog
+host    echoes          echoes           162.222.182.159/32      md5 # rsyslog
+
