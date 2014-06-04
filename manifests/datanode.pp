@@ -15,8 +15,9 @@
 class postgres_xc::datanode
 
 (
-$datanode_name      = "${::hostname}_datanode",
-$datanode_hostname  = $::hostname,
+$other_database_hostname   = '',
+$datanode_name             = "${::hostname}_datanode",
+$datanode_hostname         = $::hostname,
 )
 
 inherits postgres_xc::params  {
@@ -45,5 +46,23 @@ file { 'datanode pg_hba.conf':
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/datanode/pg_hba.conf.erb'),
+  }->
+
+file { 'datanode_wal_directory':
+  ensure    => 'directory',
+  path      => "${home}/${other_database_hostname}_arclog",
+  owner     => $super_user,
+  group     => $group,
+  mode      => '0640',
+}
+
+file { 'datanode recovery.conf':
+  ensure    => 'present',
+  path      => "${home}/${other_database_hostname}_slave/recovery.conf",
+  owner     => $super_user,
+  group     => $group,
+  mode      => '0640',
+  content   => template('postgres_xc/datanode/recovery.conf.erb'),
+  require   => Exec['basebackup'],
   }
 }

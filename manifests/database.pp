@@ -18,7 +18,11 @@ $user                      = $postgres_xc::params::user,
 $password                  = $postgres_xc::params::password,
 )
 inherits postgres_xc::params {
-  require postgres_xc::datanode
+  #require postgres_xc::datanode
+
+class { 'postgres_xc::datanode':
+  other_database_hostname => $other_database_hostname,
+}
   require postgres_xc::coordinator
   require postgres_xc::gtm_proxy
 
@@ -60,6 +64,7 @@ exec { 'createuser':
   unless  => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"select * from pg_roles;\" | grep ${user}",
   path    => [
     '/usr/local/bin',
+    '/usr/bin',
     '/bin']
   }->
 
@@ -68,6 +73,16 @@ exec { 'createdb':
   unless  => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"select * from pg_database;\" | grep ${database_name}",
   path    => [
     '/usr/local/bin',
+    '/usr/bin',
+    '/bin']
+  }
+
+exec { 'basebackup':
+  command => "sudo -u ${super_user} pg_basebackup -p ${datanode_port} -h ${other_database_hostname} -D ${home}/${other_database_hostname}_slave",
+  unless  => "[ `ls -A ${home}/${other_database_hostname}_slave` ]",
+  path    => [
+    '/usr/local/bin',
+    '/usr/bin',
     '/bin']
   }
 }

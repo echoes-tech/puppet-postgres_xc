@@ -12,3 +12,8 @@ port = <%= @datanode_port %>
 listen_addresses = '*'
 gtm_host = '<%= @datanode_hostname%>' 
 gtm_port = <%= @gtm_port %>
+
+wal_level = hot_standby
+archive_mode = on
+archive_command = 'rsync %p <%= @other_database_hostname %>:<%= @home %>/<%= @datanode_hostname %>_arclog/%f'
+max_wal_senders = 10

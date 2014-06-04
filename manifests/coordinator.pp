@@ -1,8 +1,8 @@
-# == Class: postgres_xc::coordinator 
-# 
+# == Class: postgres_xc::coordinator
+#
 # Initialise coordinator node if it was never done (based on $::coordinator_directory/postgresql.conf existence)
 # Then configure coordinator
-# 
+#
 # === Parameters
 #
 # [*coordinator_name*]

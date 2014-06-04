@@ -1,5 +1,5 @@
-# == Class: postgres_xc::gtm_standby 
-# 
+# == Class: postgres_xc::gtm_standby
+#
 # Initialise GTM standby node if it was never done (based on $::gtm_standby_directory/gtm.conf existence)
 # Then configure GTM proxy
 # Install nmap which is used in my script to check opened port.
@@ -23,7 +23,7 @@ class postgres_xc::gtm_standby
   $gtm_standby_name       = $::hostname,
   $gtm_standby_hostname   = $::hostname,
 )
-inherits postgres_xc::params 
+inherits postgres_xc::params
 {
 
 exec { "sudo -u ${user} initgtm -Z gtm -D ${home}/${gtm_standby_directory}":

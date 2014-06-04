@@ -1,5 +1,5 @@
-# == Class: postgres_xc::gtm 
-# 
+# == Class: postgres_xc::gtm
+#
 # Initialise GTM node if it was never done (based on $::gtm_directory/gtm.conf existence)
 # Then configure GTM
 # Installs init script and start it.

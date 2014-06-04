@@ -1,15 +1,15 @@
-# == Class: postgres_xc::gtm_proxy 
-# 
+# == Class: postgres_xc::gtm_proxy
+#
 # Initialise GTM proxy node if it was never done (based on $::gtm_proxy_directory/gtm_proxy.conf existence)
 # Then configure GTM proxy
-# 
+#
 # === Parameters
-# 
+#
 # [*gtm_proxy_name*]
-#   Name of gtm_proxy node 
+#   Name of gtm_proxy node
 #   Used in templates files
 #   Default : "${::hostname}_gtm_proxy"
-# 
+#
 class postgres_xc::gtm_proxy
 (
   $gtm_proxy_name = "${::hostname}_gtm_proxy",
