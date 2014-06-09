@@ -32,12 +32,14 @@ It adds bash scripts enabling high availability.
 ###Setup Requirements
 
 PG-XC should be downloaded and compiled from source.
-  
+ 
 PG-XC configures a cluster so it needs to be declared on many nodes.
 
 This tutorial/module is designed for a 4 machines environment.
 The 4 hostnames are database1, database2, gtm and gtm2.
 GTM standby is installed on gtm2
+
+Datanode\_slave needs a ssh free password authentification between the two datanodes for data replication (by rsync)
 
 To get High Availability the Postgres-xc documentation advises to install datanode, coordinator and gtm proxy process on the same server.
 GTM and GTM standby have to be installed on two other machines.
@@ -86,7 +88,7 @@ On gtm2 :
 
 ```puppet
 
-    class { 'postgres_xc::gtm': }
+    class { 'postgres_xc::gtm_standby': }
 ```
 
 ##Reference
@@ -96,37 +98,52 @@ On gtm2 :
   * postgres_xc::database: Handles database node.
   * postgres_xc::gtm: Handles GTM node.
   * postgres_xc::gtm_standby: Handles GTM standby node.
-
   * postgres_xc::coordinator: Handles coordinator process.
   * postgres_xc::datanode: Handles datanode process.
+  * postgres_xc::datanode_slave: Handles datanode_slave process.
   * postgres_xc::gtm_proxy: Handles GTM proxy process.
 
 ###Parameters
 
-####`user`
+####`super\_user`
    PG-XC processes will be launched under this user.
    default : postgres
 
+####`user`
+   Create a user named with this parameter.
+   default : echoes
+
+####`password`
+   Password for the user.
+   default : echoes
+
 ####`group`
-   User's group.
+   super_user's group.
    default : postgres
 
 ####`home`
-   User's home directory.
+   super_user's home directory.
+   default : /var/lib/postgresql
 
 ####`gtm_port`
    Listening port for gtm process.
+   default : 7777
 
 ####`gtm_proxy_port`
    Listening port for gtm_proxy process.
    default : 7777
+
 ####`datanode_port`
    Listening port of datanode process.
    default : 5555
 
+####`datanode_slave_port`
+   Listening port of datanode_slave process.
+   default : 20010
+
 ####`coordinator_port`
    Listening port for coordinator process.
-   default : 5432 (default postgre port)
+   default : 5432 (default postgreSQL port)
 
 ####`gtm_directory`
    Directory where gtm will be initialise.
@@ -138,7 +155,7 @@ On gtm2 :
 
 ####`coordinator_directory`
    Directory where coordinator will be initialised.
-   default : "$home/coordinator"
+   default : "$home/coord"
 
 ####`gtm_proxy_directory`
    Directory where gtm proxy will be initialised.
@@ -154,6 +171,10 @@ On gtm2 :
 
 ####`gtm_standby_name`
    Name of GTM standby node in configuration file.
+
+####`datanode_slave`
+   Boolean to install datanode_slave or not
+   default : true
 
 ##Limitations
 
