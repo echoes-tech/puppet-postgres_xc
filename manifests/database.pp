@@ -15,6 +15,9 @@ $other_database_hostname      = '',
 $other_coordinator_node_name  = "${other_database_hostname}_coord",
 $datanode_node_name           = "${::hostname}_datanode",
 $other_datanode_node_name     = "${other_database_hostname}_datanode",
+
+$gtm_hostname                 = $postgres_xc::params::gtm_hostname,
+$gtm_standby_hostname         = $postgres_xc::params::gtm_standby_hostname,
 $database_name                = $postgres_xc::params::database_name,
 $super_user                   = $postgres_xc::params::super_user,
 $user                         = $postgres_xc::params::user,
@@ -65,26 +68,25 @@ exec { 'initialisation cluster in DB':
     '/usr/local/bin',
     '/usr/bin',
     '/bin']
-}
-#  }->
-#
-#exec { 'createuser':
-#  command => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"create user ${user} with password '${password}';\"",
-#  unless  => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"select * from pg_roles;\" | grep ${user}",
-#  path    => [
-#    '/usr/local/bin',
-#    '/usr/bin',
-#    '/bin']
-#  }->
-#
-#exec { 'createdb':
-#  command => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"create database ${database_name};\"",
-#  unless  => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"select * from pg_database;\" | grep ${database_name}",
-#  path    => [
-#    '/usr/local/bin',
-#    '/usr/bin',
-#    '/bin']
-#  }
+  }->
+
+exec { 'createuser':
+  command => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"create user ${user} with password '${password}';\"",
+  unless  => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"select * from pg_roles;\" | grep ${user}",
+  path    => [
+    '/usr/local/bin',
+    '/usr/bin',
+    '/bin']
+  }->
+
+exec { 'createdb':
+  command => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"create database ${database_name};\"",
+  unless  => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"select * from pg_database;\" | grep ${database_name}",
+  path    => [
+    '/usr/local/bin',
+    '/usr/bin',
+    '/bin']
+  }
 
 if ($datanode_slave) {
   class { 'postgres_xc::datanode_slave':

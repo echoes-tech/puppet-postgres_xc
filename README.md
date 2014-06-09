@@ -44,7 +44,7 @@ GTM and GTM standby have to be installed on two other machines.
 
 I use "database" to indicate the node with coordinator, datanode and GTM proxy.
 
-For more information, you should read [official PG-XC tutorial](http://postgresxc.wikia.com/wiki/Real_Server_configuration). This module configures the same cluster with a GTM standby. [(GTM standby doc)](http://postgresxc.wikia.com/wiki/GTM_Standby_Configuration)
+For more information, you should read [official PG-XC tutorial](http://postgresxc.wikia.com/wiki/Real_Server_configuration). This module configures the same cluster with a GTM standby. [(GTM standby doc)](http://postgresxc.wikia.com/wiki/GTM_Standby_Configuration). It also installs datanode slave for datanode high availability : [datanode HA configuration](http://postgresxc.wikia.com/wiki/Datanode_HA_configuration).
 
 ##Usage
 
@@ -55,9 +55,9 @@ On database1 :
 ```puppet
 
     class { 'postgres_xc::database': 
-      other_database_hostname => 'database2'  
-      gtm_standby_name        => 'gtm2'
-      gtm_name                => 'gtm'
+      other_database_hostname   => 'database2'  
+      gtm_standby_hostname      => 'gtm2'
+      gtm_hostname              => 'gtm'
     }
 ```
 
@@ -67,8 +67,8 @@ On database2 :
 
     class { 'postgres_xc::database':
       other_database_hostname => 'database1'
-      gtm_standby_name        => 'gtm2'
-      gtm_name                => 'gtm'
+      gtm_standby_hostname    => 'gtm2'
+      gtm_hostname            => 'gtm'
     }
 ```
 ### Configuring GTM node

@@ -127,7 +127,8 @@ class postgres_xc::params {
 
   $gtm_hostname             = 'gtm'
   $gtm_name                 = "${gtm_hostname}"
-  $gtm_standby_name         = 'gtm2'
+  $gtm_standby_hostname     = 'gtm2'
+  $gtm_standby_name         = "${gtm_standby_hostname}"
   
   $datanode_slave           = true
 }
