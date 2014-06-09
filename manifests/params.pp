@@ -9,7 +9,7 @@
 # I improve High availability of PGXC with bash script :
 # promote_daemon.sh (executed on standby) check if $gtm_port is open on GTM server
 #   if not : promote standby as GTM
-# reconnect_daemon.sh (executed on GTM proxy) check if $gtm_port on GTM server
+# reconnect_gtm_proxy.sh (executed on GTM proxy) check if $gtm_port on GTM server
 #   if not : reconnect gtm proxy to the new GTM
 #
 # This module also install init script for the three types of machine : database, GTM stanby and GTM.
@@ -104,25 +104,30 @@
 #
 # Copyright 2014 Echoes Technologies.
 class postgres_xc::params {
-  $user                   = 'echoes'
-  $password               = 'echoes'
-  $database_name          = 'echoes'
-  $super_user             = 'postgres'
-  $group                  = 'postgres'
-  $home                   = '/var/lib/postgresql'
-  $network_address        = '192.168.0.0/24'
+  $user                     = 'echoes'
+  $password                 = 'echoes'
+  $database_name            = 'echoes'
+  $super_user               = 'postgres'
+  $group                    = 'postgres'
+  $home                     = '/var/lib/postgresql'
 
-  $gtm_port               = '7777'
-  $gtm_proxy_port         = '7777'
-  $datanode_port          = '5555'
-  $coordinator_port       = '5432'
+  $gtm_port                 = '7777'
+  $gtm_proxy_port           = '7777'
+  $datanode_port            = '5555'
+  $coordinator_port         = '5432'
+  $datanode_slave_port      = '20010'
 
-  $gtm_directory          = 'gtm'
-  $datanode_directory     = 'datanode'
-  $coordinator_directory  = 'coord'
-  $gtm_proxy_directory    = 'gtm_proxy'
-  $gtm_standby_directory  = 'gtm_standby'
+  $gtm_directory            = 'gtm'
+  $datanode_directory       = 'datanode'
+  $coordinator_directory    = 'coord'
+  $gtm_proxy_directory      = 'gtm_proxy'
+  $gtm_standby_directory    = 'gtm_standby'
+  $datanode_slave_directory = 'datanode_slave'
+  $datanode_wal_directory   = 'datanode_arclog'
 
-  $gtm_name               = 'gtm'
-  $gtm_standby_name       = 'gtm2'
+  $gtm_hostname             = 'gtm'
+  $gtm_name                 = "${gtm_hostname}"
+  $gtm_standby_name         = 'gtm2'
+  
+  $datanode_slave           = true
 }

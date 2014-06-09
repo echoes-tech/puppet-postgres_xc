@@ -1,0 +1,28 @@
+#!/bin/bash
+set -x
+datanode_slave_port=<%= @datanode_slave_port %>
+datanode_port=<%= @datanode_port %>
+coord_port=<%= @coordinator_port %>
+user="<%= @super_user %>"
+datanode_slave_path="<%= @home %>/<%= @datanode_slave_directory%>"
+other_database_host="<%= @other_database_hostname %>"
+database_host="<%= @datanode_hostname %>"
+datanode_node_name="<%= @other_datanode_node_name %>"
+other_coordinator_node_name="<%= @other_coordinator_node_name %>"
+
+continue=1
+while [ $continue -eq 1 ]
+do
+port_status=`nmap $other_database_host -p$datanode_port | grep $datanode_port | cut -d" " -f2`
+  if [ $port_status != 'open' ]
+  then
+    continue=0
+    sudo -u $user pg_ctl promote -Z datanode -D $datanode_slave_path
+    psql -U $user -p $coord_port -h $database_host -c "ALTER NODE $datanode_node_name WITH (host = '$database_host', port = $datanode_slave_port); select pgxc_pool_reload();"
+    psql -U $user -p $coord_port -h $other_database_host -c "ALTER NODE $datanode_node_name WITH (host = '$database_host', port = $datanode_slave_port); select pgxc_pool_reload();"
+    psql -U $user -p $coord_port -h $database_host -c "DROP NODE $other_coordinator_node_name; select pgxc_pool_reload();"
+
+  fi
+  sleep 1
+done
+

@@ -7,13 +7,9 @@ lc_numeric = 'fr_FR.UTF-8'
 lc_time = 'fr_FR.UTF-8'
 default_text_search_config = 'pg_catalog.french'
 
-pgxc_node_name = '<%= @datanode_node_name %>'
-port = <%= @datanode_port %>
+hot_standby = on
+pgxc_node_name = '<%= @other_datanode_node_name %>'
+port = <%= @datanode_slave_port %>
 listen_addresses = '*'
 gtm_host = '<%= @datanode_hostname%>' 
 gtm_port = <%= @gtm_port %>
-
-wal_level = hot_standby
-archive_mode = on
-archive_command = 'rsync %p <%= @other_database_hostname %>:<%= @home %>/<%= @datanode_wal_directory %>/%f'
-max_wal_senders = 10

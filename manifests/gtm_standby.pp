@@ -22,6 +22,10 @@ class postgres_xc::gtm_standby
 (
   $gtm_standby_name       = $::hostname,
   $gtm_standby_hostname   = $::hostname,
+  $gtm_hostname           = $postgres_xc::params::gtm_hostname,
+  $user                   = $postgres_xc::params::super_user,
+  $script_promote_gtm     = 'promote_gtm.sh',
+  
 )
 inherits postgres_xc::params
 {
@@ -52,20 +56,20 @@ file { '/etc/init.d/gtm_standby':
 ##
 # Failover
 ##
-file { "${home}/promote_daemon.sh":
+file { "${home}/${script_promote_gtm}":
   ensure    => 'present',
   owner     => $user,
   group     => $group,
   mode      => '0750',
-  content   => template('postgres_xc/gtm_standby/promote_daemon.sh.erb'),
+  content   => template("postgres_xc/gtm_standby/${script_promote_gtm}.erb"),
   }->
 package { 'nmap':
   ensure    => 'present',
   }->
 exec { 'promote_daemon health check GTM':
-  command   => "${home}/promote_daemon.sh &",
+  command   => "${home}/${script_promote_gtm} &",
   require   => Package ['nmap'],
-  unless    => 'ps aux | grep \'[p]romote_daemon.sh\' > /dev/null',
+  unless    => 'ps aux | grep \'[p]romote_gtm.sh\' > /dev/null',
   path      => [
     '/bin'],
   }->

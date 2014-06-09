@@ -36,18 +36,18 @@ package { 'nmap':
   ensure    => 'present',
   }->
 
-file { "${home}/reconnect_daemon.sh":
+file { "${home}/reconnect_gtm_proxy.sh":
   ensure    => 'present',
   owner     => $super_user,
   group     => $group,
   mode      => '0750',
-  content   => template('postgres_xc/gtm_proxy/reconnect_daemon.sh.erb'),
+  content   => template('postgres_xc/gtm_proxy/reconnect_gtm_proxy.sh.erb'),
   }->
 
-exec { 'reconnect_daemon health check du GTM':
-  command   => "${home}/reconnect_daemon.sh &",
+exec { 'reconnect_gtm_proxy health check du GTM':
+  command   => "${home}/reconnect_gtm_proxy.sh &",
   require   => Package ['nmap'],
-  unless    => 'ps aux | grep \'[r]econnect_daemon.sh\' > /dev/null',
+  unless    => 'ps aux | grep \'[r]econnect_gtm_proxy.sh\' > /dev/null',
   path      => [
     '/bin'],
   }

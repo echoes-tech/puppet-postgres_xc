@@ -13,17 +13,17 @@
 #   Hostname of datanode node
 #   Default : ${::hostname}
 class postgres_xc::datanode
-
 (
 $other_database_hostname   = '',
-$datanode_name             = "${::hostname}_datanode",
+$other_datanode_node_name  = "${other_database_hostname}_datanode",
+$datanode_node_name        = "${::hostname}_datanode",
 $datanode_hostname         = $::hostname,
 )
 
 inherits postgres_xc::params  {
 
 exec { 'initialisation datanode':
-  command => "sudo -u ${super_user} initdb --nodename=${datanode_name} -D ${home}/${datanode_directory}",
+  command => "sudo -u ${super_user} initdb --nodename=${datanode_node_name} -D ${home}/${datanode_directory}",
   unless  => "test -s ${home}/${datanode_directory}/postgresql.conf",
   path    => [
     '/usr/local/bin',
@@ -46,23 +46,5 @@ file { 'datanode pg_hba.conf':
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/datanode/pg_hba.conf.erb'),
-  }->
-
-file { 'datanode_wal_directory':
-  ensure    => 'directory',
-  path      => "${home}/${other_database_hostname}_arclog",
-  owner     => $super_user,
-  group     => $group,
-  mode      => '0640',
-}
-
-file { 'datanode recovery.conf':
-  ensure    => 'present',
-  path      => "${home}/${other_database_hostname}_slave/recovery.conf",
-  owner     => $super_user,
-  group     => $group,
-  mode      => '0640',
-  content   => template('postgres_xc/datanode/recovery.conf.erb'),
-  require   => Exec['basebackup'],
   }
 }

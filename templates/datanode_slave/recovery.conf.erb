@@ -1,0 +1,3 @@
+standby_mode = on
+primary_conninfo = 'host = <%= @other_database_hostname %> port = <%= @datanode_port %> user = <%= @super_user %> application_name = <%= @datanode_hostname %>'
+restore_command = 'cp <%= @home %>/<%= @datanode_wal_directory %>/%f %p'

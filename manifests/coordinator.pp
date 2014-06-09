@@ -23,7 +23,7 @@ inherits postgres_xc::params {
 
 exec { 'initialisation coordinator':
   command => "/usr/bin/sudo -u ${super_user} initdb --nodename=${coordinator_name} -D ${home}/${coordinator_directory}",
-  unless  => "test -s ${home}/${coordinator_directory}/postgresql.conf",
+  unless  => "/usr/bin/test -s ${home}/${coordinator_directory}/postgresql.conf",
   path    => [
     '/usr/local/bin',
     '/usr/bin'],

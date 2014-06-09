@@ -4,16 +4,22 @@ DAEMONUSER="<%= @super_user %>"
 GTM_PROXY_DIRECTORY="<%= @home %>/<%= @gtm_proxy_directory %>"
 DATANODE_DIRECTORY="<%= @home %>/<%= @datanode_directory %>"
 COORDINATOR_DIRECTORY="<%= @home %>/<%= @coordinator_directory %>"
+DATANODE_SLAVE_DIRECTORY="<%= @home %>/<%= @datanode_slave_directory %>"
 
 gtm_port=<%= @gtm_port %>
 gtm_hostname=<%= @gtm_name %>
 gtm_standby_hostname=<%= @gtm_standby_name %>
 gtm_proxy_configfile="<%= @home %>/<%= @gtm_proxy_directory %>/gtm_proxy.conf"
+script_gtm_proxy_name="reconnect_gtm_proxy.sh"
 
 reconfigure_gtm_proxy() {
 sed -i -e "s/gtm_host\ =\ '$gtm_hostname'/gtm_host\ =\ '$gtm_standby_hostname'/" $gtm_proxy_configfile
 }
 
+# Change conf file to switch gtm
+# wait_gtm function detects if gtm_proxy have to switch from gtm1 to gtm2
+# In this case, gtm2 isn't use as standby but as primary GTM because gtm1 didn't start
+#
 wait_gtm() {
 echo "Looking for gtm up..."
 continue=1
@@ -40,13 +46,8 @@ do
   fi
   sleep 0.5
 done
-
-# Change conf file to switch gtm
-# It's wait_gtm function who detect 
-# if proxy have to switch from gtm1 to gtm2 standby (which is in fact the gtm because gtm1 doesn't start)
-
-
 }
+
 do_start() {
 echo "Starting GTM-proxy..."
 rm <%= @home %>/<%= @gtm_proxy_directory %>/register.node
@@ -59,14 +60,16 @@ echo "Starting datanode..."
 sudo -u $DAEMONUSER pg_ctl start -Z datanode -D $DATANODE_DIRECTORY
 echo "Starting coordinator..."
 sudo -u $DAEMONUSER pg_ctl start -Z coordinator -D $COORDINATOR_DIRECTORY
-.<%= @home %>/reconnect_daemon.sh &
+sudo -u $DAEMONUSER .<%= @home %>/$script_gtm_proxy_name &
+sudo -u $DAEMONUSER pg_ctl start -Z datanode -D $DATANODE_SLAVE_DIRECTORY
 }
 
 do_stop () {
 sudo -u $DAEMONUSER pg_ctl stop -Z coordinator -D $COORDINATOR_DIRECTORY
 sudo -u $DAEMONUSER pg_ctl stop -Z datanode -D $DATANODE_DIRECTORY
 sudo -u $DAEMONUSER gtm_ctl stop -Z gtm_proxy -D $GTM_PROXY_DIRECTORY
-killall reconnect_daemon.sh
+sudo -u $DAEMONUSER pg_ctl stop -Z datanode -D $DATANODE_SLAVE_DIRECTORY
+killall $script_gtm_proxy_name
 }
 
 do_force_stop () {
@@ -75,6 +78,7 @@ sleep 0.2
 sudo -u $DAEMONUSER pg_ctl stop -Z datanode -D $DATANODE_DIRECTORY -m immediate &
 sleep 0.2
 sudo -u $DAEMONUSER gtm_ctl stop -Z gtm_proxy -D $GTM_PROXY_DIRECTORY -m immediate &
+sudo -u $DAEMONUSER pg_ctl stop -Z datanode -D $DATANODE_SLAVE_DIRECTORY -m immediate &
 }
 
 case "$1" in
