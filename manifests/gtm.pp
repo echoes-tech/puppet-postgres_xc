@@ -18,13 +18,13 @@
 #
 class postgres_xc::gtm
 (
-  $gtm_name       = $::hostname,
   $gtm_hostname   = $::hostname,
+  $gtm_name       = "$gtm_hostname",
 )
 inherits postgres_xc::params {
 
 exec { 'Initialisation GTM':
-  command => "sudo -u ${user} initgtm -Z gtm -D ${home}/${gtm_directory}",
+  command => "sudo -u ${super_user} initgtm -Z gtm -D ${home}/${gtm_directory}",
   unless  => "test -s ${home}/${gtm_directory}/gtm.conf",
   path    => [
     '/usr/local/bin',
@@ -33,11 +33,11 @@ exec { 'Initialisation GTM':
 
 file { "${home}/${gtm_directory}/gtm.conf":
   ensure    => 'present',
-  owner     => $user,
+  owner     => $super_user,
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/gtm/gtm.conf.erb'),
-  require   => Exec['Initialisation GTM']
+  require   => Exec['Initialisation GTM'],
   }
 
 file { '/etc/init.d/gtm':

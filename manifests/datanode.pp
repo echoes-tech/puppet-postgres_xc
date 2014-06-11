@@ -18,6 +18,7 @@ $other_database_hostname   = '',
 $other_datanode_node_name  = "${other_database_hostname}_datanode",
 $datanode_node_name        = "${::hostname}_datanode",
 $datanode_hostname         = $::hostname,
+$datanode_slave            = $postgres_xc::params::datanode_slave,
 )
 
 inherits postgres_xc::params  {

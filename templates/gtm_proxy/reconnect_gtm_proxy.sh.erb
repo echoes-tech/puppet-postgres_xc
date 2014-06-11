@@ -1,10 +1,10 @@
 #!/bin/bash
-
+set -x
 gtm_port=<%= @gtm_port %>
-gtm_standby_name=<%= @gtm_standby_name %>
+gtm_standby_hostname=<%= @gtm_standby_hostname %>
 user=<%= @super_user %>
 gtm_proxy_path="<%= @home %>/<%= @gtm_directory %>"
-gtm_host=<%= @gtm_name %>
+gtm_host=<%= @gtm_hostname %>
 
 continue=1
 while [ $continue -eq 1 ]
@@ -13,7 +13,7 @@ port_status="`nmap $gtm_host -p$gtm_port | grep $gtm_port | cut -d" " -f2`"
   if [ $port_status != "open" ]
   then
     sleep 1.5 # sleep pour s'assurer que le gtm standby sera promote avant la reco des gtm proxies
-    sudo -u $user gtm_ctl reconnect -Z gtm_proxy -D $gtm_proxy_path -o "-s $gtm_standby_name -t $gtm_port"
+    sudo -u $user gtm_ctl reconnect -Z gtm_proxy -D $gtm_proxy_path -o "-s $gtm_standby_hostname -t $gtm_port"
     continue=0
   fi
   sleep 1

@@ -12,7 +12,9 @@
 #
 class postgres_xc::gtm_proxy
 (
-  $gtm_proxy_name = "${::hostname}_gtm_proxy",
+  $gtm_proxy_name         = "${::hostname}_gtm_proxy",
+  $gtm_hostname           = $postgres_xc::params::gtm_hostname,
+  $gtm_standby_hostname   = $postgres_xc::params::gtm_standby_hostname,
 )
 inherits postgres_xc::params {
 

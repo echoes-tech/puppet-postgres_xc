@@ -20,8 +20,8 @@
 #
 class postgres_xc::gtm_standby
 (
-  $gtm_standby_name       = $::hostname,
   $gtm_standby_hostname   = $::hostname,
+  $gtm_standby_name       = $::hostname,
   $gtm_hostname           = $postgres_xc::params::gtm_hostname,
   $user                   = $postgres_xc::params::super_user,
   $script_promote_gtm     = 'promote_gtm.sh',
@@ -32,7 +32,7 @@ inherits postgres_xc::params
 
 exec { "sudo -u ${user} initgtm -Z gtm -D ${home}/${gtm_standby_directory}":
   unless  => "test -s ${home}/${gtm_standby_directory}/gtm.conf",
-  before  => Exec['promote_daemon health check GTM'],
+  before  => Exec['promote_gtm'],
   path    => [
     '/usr/local/bin',
     '/usr/bin'],
@@ -66,13 +66,6 @@ file { "${home}/${script_promote_gtm}":
 package { 'nmap':
   ensure    => 'present',
   }->
-exec { 'promote_daemon health check GTM':
-  command   => "${home}/${script_promote_gtm} &",
-  require   => Package ['nmap'],
-  unless    => 'ps aux | grep \'[p]romote_gtm.sh\' > /dev/null',
-  path      => [
-    '/bin'],
-  }->
 
 service { 'gtm_standby':
   ensure      => 'running',
@@ -80,5 +73,13 @@ service { 'gtm_standby':
   hasrestart  => true,
   hasstatus   => false,
   pattern     => "gtm -D ${home}/${gtm_standby_directory}"
+  }->
+
+exec { 'promote_gtm':
+  command   => "${home}/${script_promote_gtm} &",
+  require   => Package ['nmap'],
+  unless    => 'ps aux | grep \'[p]romote_gtm.sh\' > /dev/null',
+  path      => [
+    '/bin'],
   }
 }

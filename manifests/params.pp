@@ -68,23 +68,31 @@
 #   Name of GTM node in configuration file
 #   Default : gtm
 #
+# [*gtm_hostname*]
+#   Hostame of machine where GTM is.
+#   Default : gtm
+#
 # [*gtm_standby_name*]
 #   Name of GTM standby node in configuration file
+#   Default : gtm2
+#
+# [*gtm_standby_hostname*]
+#   Hostname of machine where GTM standby is
 #   Default : gtm2
 #
 # === Example 
 #   On Database server 1:
 #   class { 'postgres_xc::database':
 #     other_database_hostname => 'database2',
-#     gtm_name                => 'gtm',
-#     gtm_standby_name        => 'gtm2',
+#     gtm_hostname                => 'gtm',
+#     gtm_standby_hostname        => 'gtm2',
 #   }
 #
 #   On Database server 2:
 #   class { 'postgres_xc::database':
 #     other_database_hostname => 'database1',
-#     gtm_name                => 'gtm',
-#     gtm_standby_name        => 'gtm2',
+#     gtm_hostname                => 'gtm',
+#     gtm_standby_hostname        => 'gtm2',
 #   }
 #
 #   On GTM server:

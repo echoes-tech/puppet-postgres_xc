@@ -1,7 +1,8 @@
 #!/bin/bash
 
-DAEMONUSER="<%= @user %>"
+DAEMONUSER="<%= @super_user %>"
 DAEMONDIRECTORY="<%= @home %>/<%= @gtm_standby_directory %>"
+script_promote_gtm="promote_gtm.sh"
 
 gtm_port=<%= @gtm_port %>
 timeToWait=20
@@ -28,7 +29,7 @@ wait_if_gtm_alived() {
 do_start() {
   rm $DAEMONDIRECTORY/register.node
   sudo -u $DAEMONUSER gtm_ctl start -Z gtm -D $DAEMONDIRECTORY
-  .<%= @home %>/promote_daemon.sh &
+  .<%= @home %>/$script_promote_gtm &
 }
 
 # function start when standby is teranformed in simple gtm.
@@ -40,7 +41,7 @@ rm $DAEMONDIRECTORY/register.node
 
 do_stop () {
   sudo -u $DAEMONUSER gtm_ctl stop -Z gtm -D $DAEMONDIRECTORY
-  killall promote_daemon.sh
+  killall $script_promote_gtm
 }
 
 # Change configuration from gtm standby to simple gtm

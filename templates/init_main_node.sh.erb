@@ -7,10 +7,11 @@ COORDINATOR_DIRECTORY="<%= @home %>/<%= @coordinator_directory %>"
 DATANODE_SLAVE_DIRECTORY="<%= @home %>/<%= @datanode_slave_directory %>"
 
 gtm_port=<%= @gtm_port %>
-gtm_hostname=<%= @gtm_name %>
-gtm_standby_hostname=<%= @gtm_standby_name %>
+gtm_hostname=<%= @gtm_hostname %>
+gtm_standby_hostname=<%= @gtm_standby_hostname %>
 gtm_proxy_configfile="<%= @home %>/<%= @gtm_proxy_directory %>/gtm_proxy.conf"
 script_gtm_proxy_name="reconnect_gtm_proxy.sh"
+script_datanode_name="promote_datanode.sh"
 
 reconfigure_gtm_proxy() {
 sed -i -e "s/gtm_host\ =\ '$gtm_hostname'/gtm_host\ =\ '$gtm_standby_hostname'/" $gtm_proxy_configfile
@@ -69,7 +70,8 @@ sudo -u $DAEMONUSER pg_ctl stop -Z coordinator -D $COORDINATOR_DIRECTORY
 sudo -u $DAEMONUSER pg_ctl stop -Z datanode -D $DATANODE_DIRECTORY
 sudo -u $DAEMONUSER gtm_ctl stop -Z gtm_proxy -D $GTM_PROXY_DIRECTORY
 sudo -u $DAEMONUSER pg_ctl stop -Z datanode -D $DATANODE_SLAVE_DIRECTORY
-killall $script_gtm_proxy_name
+ps aux | grep $script_gtm_proxy_name | awk '{ print $2 }' | xargs kill -9
+ps aux | grep $script_datanode_name | awk '{ print $2 }' | xargs kill -9
 }
 
 do_force_stop () {
@@ -78,7 +80,10 @@ sleep 0.2
 sudo -u $DAEMONUSER pg_ctl stop -Z datanode -D $DATANODE_DIRECTORY -m immediate &
 sleep 0.2
 sudo -u $DAEMONUSER gtm_ctl stop -Z gtm_proxy -D $GTM_PROXY_DIRECTORY -m immediate &
+sleep 0.2
 sudo -u $DAEMONUSER pg_ctl stop -Z datanode -D $DATANODE_SLAVE_DIRECTORY -m immediate &
+ps aux | grep $script_gtm_proxy_name | awk '{ print $2 }' | xargs kill -9
+ps aux | grep $script_datanode_name | awk '{ print $2 }' | xargs kill -9
 }
 
 case "$1" in
@@ -95,7 +100,6 @@ case "$1" in
     ;;
   force-stop)
     do_force_stop
-    killall postgres
     ;;
   *)
     echo "Usage : $0 {start|stop|restart|force-stop}"

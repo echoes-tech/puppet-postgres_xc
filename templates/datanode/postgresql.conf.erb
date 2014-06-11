@@ -13,7 +13,9 @@ listen_addresses = '*'
 gtm_host = '<%= @datanode_hostname%>' 
 gtm_port = <%= @gtm_port %>
 
+<%- if @datanode_slave -%>
 wal_level = hot_standby
 archive_mode = on
 archive_command = 'rsync %p <%= @other_database_hostname %>:<%= @home %>/<%= @datanode_wal_directory %>/%f'
 max_wal_senders = 10
+<%- end -%>

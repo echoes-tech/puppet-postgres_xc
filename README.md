@@ -18,7 +18,7 @@ Postgres-XC (PG-XC) module. Configures a basic cluster and manages PG-XC service
 
 ##Module Description
 
-This module does not install PG-XC. It configures a cluster on Debian system.
+This module does not install PG-XC. It configures a Postgres-XC cluster on Debian system.
 It adds service script.    
 It adds bash scripts enabling high availability.
 
@@ -57,9 +57,9 @@ On database1 :
 ```puppet
 
     class { 'postgres_xc::database': 
-      other_database_hostname   => 'database2'  
-      gtm_standby_hostname      => 'gtm2'
-      gtm_hostname              => 'gtm'
+      other_database_hostname   => 'database2',
+      gtm_standby_hostname      => 'gtm2',
+      gtm_hostname              => 'gtm',
     }
 ```
 
@@ -68,9 +68,9 @@ On database2 :
 ```puppet
 
     class { 'postgres_xc::database':
-      other_database_hostname => 'database1'
-      gtm_standby_hostname    => 'gtm2'
-      gtm_hostname            => 'gtm'
+      other_database_hostname => 'database1',
+      gtm_standby_hostname    => 'gtm2',
+      gtm_hostname            => 'gtm',
     }
 ```
 ### Configuring GTM node
@@ -88,7 +88,9 @@ On gtm2 :
 
 ```puppet
 
-    class { 'postgres_xc::gtm_standby': }
+    class { 'postgres_xc::gtm_standby':
+      gtm_hostname    => 'gtm',    
+ }
 ```
 
 ##Reference
