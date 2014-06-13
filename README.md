@@ -90,7 +90,7 @@ On gtm2 :
 
     class { 'postgres_xc::gtm_standby':
       gtm_hostname    => 'gtm',    
- }
+    }
 ```
 
 ##Reference
@@ -107,7 +107,7 @@ On gtm2 :
 
 ###Parameters
 
-####`super\_user`
+####`super_user`
    PG-XC processes will be launched under this user.
    default : postgres
 

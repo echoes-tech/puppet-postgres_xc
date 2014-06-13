@@ -37,6 +37,7 @@ $super_user                   = $postgres_xc::params::super_user,
 $user                         = $postgres_xc::params::user,
 $password                     = $postgres_xc::params::password,
 $datanode_slave               = $postgres_xc::params::datanode_slave,
+$gtm_proxy                    = $postgres_xc::params::gtm_proxy,
 )
 inherits postgres_xc::params {
 
@@ -45,13 +46,20 @@ class { 'postgres_xc::datanode':
   datanode_node_name         => $datanode_node_name,
   other_datanode_node_name   => $other_datanode_node_name,
   datanode_slave             => $datanode_slave,  
+  gtm_proxy                  => $gtm_proxy,
 }
-  require postgres_xc::coordinator
-# require postgres_xc::gtm_proxy
+#  require postgres_xc::coordinator
 
-class { 'postgres_xc::gtm_proxy':
-  gtm_hostname          => $gtm_hostname,
-  gtm_standby_hostname  => $gtm_standby_hostname,
+class { 'postgres_xc::coordinator':
+  gtm_proxy         => $gtm_proxy,
+  gtm_hostname      => $gtm_hostname,
+}
+
+if ($gtm_proxy) {
+  class { 'postgres_xc::gtm_proxy':
+    gtm_hostname          => $gtm_hostname,
+    gtm_standby_hostname  => $gtm_standby_hostname,
+  }
 }
 
 file { '/etc/init.d/database':

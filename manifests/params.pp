@@ -99,7 +99,10 @@
 #   class { 'postgres_xc::gtm': }
 #     
 #   On GTM standby server:
-#   class { 'postgres_xc::gtm_standby':}
+#   class { 'postgres_xc::gtm_standby':
+#     gtm_hostname          => 'gtm',
+#     gtm_standby_hostname  => 'gtm2',
+#   }
 #
 # Requires:
 #   Download and compile yourself PGXC (module made and tested with PGXC 1.0.4)
@@ -139,4 +142,5 @@ class postgres_xc::params {
   $gtm_standby_name         = "${gtm_standby_hostname}"
   
   $datanode_slave           = true
+  $gtm_proxy                = true
 }

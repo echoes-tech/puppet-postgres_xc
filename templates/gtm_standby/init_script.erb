@@ -5,6 +5,8 @@ DAEMONDIRECTORY="<%= @home %>/<%= @gtm_standby_directory %>"
 script_promote_gtm="promote_gtm.sh"
 
 gtm_port=<%= @gtm_port %>
+gtm_host=<%= @gtm_hostname %>
+
 timeToWait=20
 config_file="$DAEMONDIRECTORY/gtm.conf"
 
@@ -13,7 +15,7 @@ wait_if_gtm_alived() {
   time=0
   while [ $time -lt $timeToWait ]
   do
-  port_status=`nmap gtm -p$gtm_port | grep $gtm_port | cut -d" " -f2`
+  port_status=`nmap $gtm_host -p$gtm_port | grep $gtm_port | cut -d" " -f2`
     if [ $port_status == 'open' ]
     then
       return 0
@@ -41,7 +43,7 @@ rm $DAEMONDIRECTORY/register.node
 
 do_stop () {
   sudo -u $DAEMONUSER gtm_ctl stop -Z gtm -D $DAEMONDIRECTORY
-  killall $script_promote_gtm
+  ps aux |grep $script_promote_gtm | awk '{ print $2 }' | xargs kill -9
 }
 
 # Change configuration from gtm standby to simple gtm
@@ -70,7 +72,7 @@ case "$1" in
     ;;
   force-stop)
     do_stop
-    killall gtm
+    ps aux |grep gtm_standby | awk '{ print $2 }' | xargs kill -9
     ;;
   *)
     echo "Usage : $0 {start|stop|restart|force-stop}"

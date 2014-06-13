@@ -8,8 +8,14 @@ lc_time = 'fr_FR.UTF-8'
 default_text_search_config = 'pg_catalog.french'
 
 pooler_port = <%= @datanode_port %>
-gtm_host = '<%= @coordinator_hostname %>' 
+<%- if @gtm_proxy -%>
+gtm_host = 'localhost' 
+gtm_port = <%= @gtm_proxy_port %>
+<%- else -%>
+gtm_host = '<%= @gtm_hostname %>' 
 gtm_port = <%= @gtm_port %>
+<%- end -%>
+
 pgxc_node_name = '<%= @coordinator_name %>'
 listen_addresses = '*'
 port = <%= @coordinator_port %>

@@ -10,8 +10,14 @@ default_text_search_config = 'pg_catalog.french'
 pgxc_node_name = '<%= @datanode_node_name %>'
 port = <%= @datanode_port %>
 listen_addresses = '*'
-gtm_host = '<%= @datanode_hostname%>' 
+
+<%- if @gtm_proxy -%>
+gtm_host = 'localhost' 
+gtm_port = <%= @gtm_proxy_port %>
+<%- else -%>
+gtm_host = '<%= @gtm_hostname %>' 
 gtm_port = <%= @gtm_port %>
+<%- end -%>
 
 <%- if @datanode_slave -%>
 wal_level = hot_standby

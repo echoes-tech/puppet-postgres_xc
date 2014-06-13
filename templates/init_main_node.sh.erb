@@ -61,7 +61,7 @@ echo "Starting datanode..."
 sudo -u $DAEMONUSER pg_ctl start -Z datanode -D $DATANODE_DIRECTORY
 echo "Starting coordinator..."
 sudo -u $DAEMONUSER pg_ctl start -Z coordinator -D $COORDINATOR_DIRECTORY
-sudo -u $DAEMONUSER .<%= @home %>/$script_gtm_proxy_name &
+.<%= @home %>/$script_gtm_proxy_name &
 sudo -u $DAEMONUSER pg_ctl start -Z datanode -D $DATANODE_SLAVE_DIRECTORY
 }
 

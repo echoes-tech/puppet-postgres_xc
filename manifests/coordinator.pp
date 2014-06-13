@@ -16,7 +16,9 @@ class postgres_xc::coordinator
 
 (
 $coordinator_name     = "${::hostname}_coord",
-$coordinator_hostname = $::hostname
+$coordinator_hostname = $::hostname,
+$gtm_hostname         = $postgres_xc::params::gtm_hostname,
+$gtm_proxy            = $postgres_xc::params::gtm_proxy
 )
 
 inherits postgres_xc::params {
