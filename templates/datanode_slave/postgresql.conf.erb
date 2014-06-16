@@ -11,5 +11,11 @@ hot_standby = on
 pgxc_node_name = '<%= @other_datanode_node_name %>'
 port = <%= @datanode_slave_port %>
 listen_addresses = '*'
-gtm_host = '<%= @datanode_hostname%>' 
+
+<%- if @gtm_proxy -%>
+gtm_host = 'localhost' 
+gtm_port = <%= @gtm_proxy_port %>
+<%- else -%>
+gtm_host = '<%= @gtm_hostname %>' 
 gtm_port = <%= @gtm_port %>
+<%- end -%>

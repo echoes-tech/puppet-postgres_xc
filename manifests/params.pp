@@ -142,5 +142,5 @@ class postgres_xc::params {
   $gtm_standby_name         = "${gtm_standby_hostname}"
   
   $datanode_slave           = true
-  $gtm_proxy                = true
+  $gtm_proxy                = true # if disabled, GTM failover can't work (PG-XC limitation)
 }
