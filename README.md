@@ -56,7 +56,8 @@ On database1 :
 
 ```puppet
 
-    class { 'postgres_xc::database': 
+    class { 'postgres_xc': 
+      database                  => true,
       other_database_hostname   => 'database2',
       gtm_standby_hostname      => 'gtm2',
       gtm_hostname              => 'gtm',
@@ -67,7 +68,8 @@ On database2 :
 
 ```puppet
 
-    class { 'postgres_xc::database':
+    class { 'postgres_xc':
+      database                => true,
       other_database_hostname => 'database1',
       gtm_standby_hostname    => 'gtm2',
       gtm_hostname            => 'gtm',
@@ -79,7 +81,9 @@ On gtm :
 
 ```puppet
 
-    class { 'postgres_xc::gtm': }
+    class { 'postgres_xc': 
+      gtm     => true,
+    }
 ```
 
 ### Configuring GTM standby node
@@ -88,7 +92,8 @@ On gtm2 :
 
 ```puppet
 
-    class { 'postgres_xc::gtm_standby':
+    class { 'postgres_xc':
+      gtm_standby     => true,
       gtm_hostname    => 'gtm',    
     }
 ```
@@ -97,6 +102,8 @@ On gtm2 :
 
 ###Classes
 
+
+  * postgres_xc: Handles all nodes.
   * postgres_xc::database: Handles database node.
   * postgres_xc::gtm: Handles GTM node.
   * postgres_xc::gtm_standby: Handles GTM standby node.
@@ -109,6 +116,7 @@ On gtm2 :
 
 ####`super_user`
    PG-XC processes will be launched under this user.
+    If $super_user doesn't exist, it will creates it.
    default : postgres
 
 ####`user`
