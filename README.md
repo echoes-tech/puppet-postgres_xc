@@ -193,3 +193,7 @@ This module has been tested only on Debian sytems.
 ##Development
 
 Bug can be reported on [Github issues tracker](https://github.com/echoes-tech/puppet-postgres_xc/issues)
+
+###Changelog
+
+v0.2.0 Support datanode slave

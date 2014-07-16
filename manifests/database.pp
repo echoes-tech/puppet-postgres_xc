@@ -36,6 +36,7 @@ $database_name                = $postgres_xc::params::database_name,
 $super_user                   = $postgres_xc::params::super_user,
 $user                         = $postgres_xc::params::user,
 $password                     = $postgres_xc::params::password,
+$acl_db                       = $postgres_xc::params::acl_db,
 $datanode_slave               = $postgres_xc::params::datanode_slave,
 $gtm_proxy                    = $postgres_xc::params::gtm_proxy,
 )
@@ -48,11 +49,11 @@ class { 'postgres_xc::datanode':
   datanode_slave             => $datanode_slave,  
   gtm_proxy                  => $gtm_proxy,
 }
-#  require postgres_xc::coordinator
 
 class { 'postgres_xc::coordinator':
   gtm_proxy         => $gtm_proxy,
   gtm_hostname      => $gtm_hostname,
+  acl_db            => $acl_db,
 }
 
 if ($gtm_proxy) {

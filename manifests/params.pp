@@ -44,6 +44,10 @@
 #   Listening port for coordinator process
 #   Default = 5432 (default postgre port)
 #
+# [*datanode_slave_port*]
+#   Listening port for datanode slave process
+#   Default : 20010
+#
 # [*gtm_directory*]
 #   Directory where gtm will be initialise
 #   Default = "$home/gtm"
@@ -51,6 +55,14 @@
 # [*datanode_directory*]
 #   Directory where datanode will be initialise
 #   Default = "$home/datanode"
+#
+# [*datanode_slave_directory*]
+#   Directory where datanode slave will be initialise
+#   Default = "$home/datanode_slave"
+#
+# [*datanode_wal_directory*]
+#   Directory where write-ahead logging are stored
+#   Default = "$home/datanode_wal"
 #
 # [*coordinator_directory*]
 #   Directory where coordinator will be initialise
@@ -79,6 +91,14 @@
 # [*gtm_standby_hostname*]
 #   Hostname of machine where GTM standby is
 #   Default : gtm2
+#
+# [*datanode_slave*]
+#   Boolean to configure or not a datanode slave 
+#   Default : true
+#
+# [*acl_db*]
+#   String to populate pg_hba.conf on coordinator node 
+#   Default is empty
 #
 # === Example 
 #   On Database server 1:
@@ -121,6 +141,7 @@ class postgres_xc::params {
   $super_user               = 'postgres'
   $group                    = 'postgres'
   $home                     = '/var/lib/postgresql'
+  $acl_db                   = ''
 
   $gtm_port                 = '7777'
   $gtm_proxy_port           = '7777'

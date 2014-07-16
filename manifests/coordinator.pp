@@ -15,6 +15,7 @@
 class postgres_xc::coordinator
 
 (
+$acl_db               = $postgres_xc::params::acl_db,
 $coordinator_name     = "${::hostname}_coord",
 $coordinator_hostname = $::hostname,
 $gtm_hostname         = $postgres_xc::params::gtm_hostname,
