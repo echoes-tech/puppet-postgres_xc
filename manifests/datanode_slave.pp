@@ -56,6 +56,7 @@ file { 'datanode_slave recovery.conf':
   mode      => '0600',
   content   => template('postgres_xc/datanode_slave/recovery.conf.erb'),
   require   => Exec['basebackup'],
+  subscribe => Exec['reload_db'],
 }->
 
 file { 'datanode_slave postgresql.conf':
@@ -66,6 +67,7 @@ file { 'datanode_slave postgresql.conf':
   mode      => '0640',
   content   => template('postgres_xc/datanode_slave/postgresql.conf.erb'),
   require   => Exec['basebackup'],
+  subscribe => Exec['reload_db'],
 }->
 
 

@@ -80,6 +80,17 @@
 #   Name of GTM node in configuration file
 #   Default : gtm
 #
+# [*other_database_hostname*]
+#   Hostname of the second database server.
+#   Has to be overwrite on each database server
+#   Default is empty
+#
+# [*other_database_ip*]
+#   IP of the second database server.
+#   Has to be overwrite on each database server
+#   Use in datanode pg_hba.conf template file
+#   Default is empty
+#
 # [*gtm_hostname*]
 #   Hostame of machine where GTM is.
 #   Default : gtm
@@ -157,6 +168,8 @@ class postgres_xc::params {
   $datanode_slave_directory = 'datanode_slave'
   $datanode_wal_directory   = 'datanode_arclog'
 
+  $other_database_hostname  = ''
+  $other_database_ip        = 'd'
   $gtm_hostname             = 'gtm'
   $gtm_name                 = "${gtm_hostname}"
   $gtm_standby_hostname     = 'gtm2'

@@ -14,7 +14,8 @@
 #   Default : ${::hostname}
 class postgres_xc::datanode
 (
-$other_database_hostname   = '',
+$other_database_hostname   = $postgres_xc::params::other_database_hostname,
+$other_database_ip         = $postgres_xc::params::other_database_ip,
 $other_datanode_node_name  = "${other_database_hostname}_datanode",
 $datanode_node_name        = "${::hostname}_datanode",
 $datanode_hostname         = $::hostname,
@@ -39,6 +40,7 @@ file { 'datanode postgresql.conf':
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/datanode/postgresql.conf.erb'),
+  subscribe => Exec['reload_db'],
   }->
 
 file { 'datanode pg_hba.conf':
@@ -48,5 +50,6 @@ file { 'datanode pg_hba.conf':
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/datanode/pg_hba.conf.erb'),
+  subscribe => Exec['reload_db'],
   }
 }

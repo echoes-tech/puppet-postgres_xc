@@ -5,14 +5,10 @@
 local   all             all                                     trust
 # IPv4 local connections:
 host    all             all             127.0.0.1/32            trust
-host    all             all             samenet                 trust
 # IPv6 local connections:
 host    all             all             ::1/128                 trust
 
-host    all             all              92.245.142.221/32       md5 # poste-local
-host    all             all              192.168.0.228/24        trust #database 2
-host    replication     postgres         192.168.0.228/24        trust #database 2
-host    all             all              192.168.0.167/24        trust # database 1
-host    replication     postgres         192.168.0.167/24        trust # database 1
-host    all             all              192.168.0.40/24        trust # database 1
-host    all             all              192.168.0.203/24        trust # database 1
+<% if @datanode_slave %>
+host replication <%= @super_user %> <%= other_database_ip %> trust
+<% end %>
+host all all <%= other_database_ip %> trust

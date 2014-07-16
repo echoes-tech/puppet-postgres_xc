@@ -74,6 +74,12 @@ ps aux | grep $script_gtm_proxy_name | awk '{ print $2 }' | xargs kill -9
 ps aux | grep $script_datanode_name | awk '{ print $2 }' | xargs kill -9
 }
 
+do_reload () {
+sudo -u $DAEMONUSER pg_ctl reload -Z coordinator -D $COORDINATOR_DIRECTORY
+sudo -u $DAEMONUSER pg_ctl reload -Z datanode -D $DATANODE_DIRECTORY
+sudo -u $DAEMONUSER pg_ctl reload -Z datanode -D $DATANODE_SLAVE_DIRECTORY
+}
+
 do_force_stop () {
 sudo -u $DAEMONUSER pg_ctl stop -Z coordinator -D $COORDINATOR_DIRECTORY -m immediate &
 sleep 0.2
@@ -101,6 +107,9 @@ case "$1" in
   force-stop)
     do_force_stop
     ;;
+  reload)
+    do_reload
+    ;;
   *)
-    echo "Usage : $0 {start|stop|restart|force-stop}"
+    echo "Usage : $0 {start|stop|restart|reload|force-stop}"
 esac

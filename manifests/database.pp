@@ -25,7 +25,8 @@
 #
 class postgres_xc::database
 (
-$other_database_hostname      = '',
+$other_database_hostname      = $postgres_xc::params::other_database_hostname,
+$other_database_ip            = $postgres_xc::params::other_database_ip,
 $other_coordinator_node_name  = "${other_database_hostname}_coord",
 $datanode_node_name           = "${::hostname}_datanode",
 $other_datanode_node_name     = "${other_database_hostname}_datanode",
@@ -44,6 +45,7 @@ inherits postgres_xc::params {
 
 class { 'postgres_xc::datanode':
   other_database_hostname    => $other_database_hostname,
+  other_database_ip          => $other_database_ip,
   datanode_node_name         => $datanode_node_name,
   other_datanode_node_name   => $other_datanode_node_name,
   datanode_slave             => $datanode_slave,  
@@ -125,5 +127,8 @@ if ($datanode_slave) {
     require                    => Exec ['wait_db_up'], 
   }
 }
-}
 
+exec { 'reload_db':
+  command   => '/etc/init.d/database reload',
+}
+}

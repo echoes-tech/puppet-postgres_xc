@@ -38,6 +38,7 @@ file { 'coordinator postgresql.conf':
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/coordinator/postgresql.conf.erb'),
+  subscribe => Exec['reload_db'],
   }->
 
 file { 'coord pg_hba.conf':
@@ -48,5 +49,6 @@ file { 'coord pg_hba.conf':
   mode      => '0640',
   content   => template('postgres_xc/coordinator/pg_hba.conf.erb'),
   require   => Exec ['initialisation coordinator'],
+  subscribe => Exec['reload_db'],
   }
 }

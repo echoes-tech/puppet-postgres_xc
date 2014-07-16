@@ -11,7 +11,8 @@ class postgres_xc
   $gtm                      = false,
   $database                 = false,
   $gtm_standby              = false,
-  $other_database_hostname  = '',
+  $other_database_hostname  = $postgres_xc::params::other_database_hostname,
+  $other_database_ip        = $postgres_xc::params::other_database_ip,
   $datanode_slave           = $postgres_xc::params::datanode_slave, 
   $gtm_proxy                = $postgres_xc::params::gtm_proxy, 
 ) inherits postgres_xc::params
@@ -25,6 +26,7 @@ class postgres_xc
   if ($database) {
     class { 'postgres_xc::database': 
       other_database_hostname => $other_database_hostname,
+      other_database_ip       => $other_database_ip,
       gtm_hostname            => $gtm_hostname,
       gtm_standby_hostname    => $gtm_standby_hostname,
       database_name           => $database_name,
