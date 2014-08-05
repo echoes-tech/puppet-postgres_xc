@@ -80,7 +80,7 @@ service { 'database':
   hasstatus   => false,
   start       => '/etc/init.d/database start',
   pattern     => 'postgres -C -D',
-  require     => File['/etc/init.d/database'],
+  require     => [ File['/etc/init.d/database'], Class['postgres_xc::coordinator'] ]
   }->
 
 #Wait for the process start, otherwise followed exec while fail because puppet is faster than all process to start.
@@ -90,7 +90,7 @@ exec { 'wait_db_up':
     '/bin']
   }->
 
-exec { 'initialisation cluster in DB':
+exec { 'db_init':
   unless  => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"select node_name from pgxc_node;\" | grep ${datanode_node_name}",
   command => "psql -U ${super_user} -h ${datanode::datanode_hostname} -c \"CREATE NODE ${other_coordinator_node_name} WITH (TYPE = 'coordinator', HOST = '${other_database_hostname}', PORT = ${coordinator_port}); CREATE NODE ${datanode_node_name} WITH (TYPE = 'datanode', HOST = '${datanode::datanode_hostname}', PORT = ${datanode_port} ); CREATE NODE ${other_datanode_node_name} WITH (TYPE = 'datanode', HOST = '${other_database_hostname}', PORT = ${datanode_port}); select pgxc_pool_reload();\"",
 
@@ -128,7 +128,4 @@ if ($datanode_slave) {
   }
 }
 
-exec { 'reload_db':
-  command   => '/etc/init.d/database reload',
-}
 }

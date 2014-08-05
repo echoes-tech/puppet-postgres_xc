@@ -59,6 +59,7 @@ On database1 :
     class { 'postgres_xc': 
       database                  => true,
       other_database_hostname   => 'database2',
+      other_database_ip         => '192.168.0.2/24',
       gtm_standby_hostname      => 'gtm2',
       gtm_hostname              => 'gtm',
     }
@@ -71,6 +72,7 @@ On database2 :
     class { 'postgres_xc':
       database                => true,
       other_database_hostname => 'database1',
+      other_database_ip       => '192.168.0.1/24',
       gtm_standby_hostname    => 'gtm2',
       gtm_hostname            => 'gtm',
     }

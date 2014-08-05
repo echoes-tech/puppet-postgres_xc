@@ -40,7 +40,6 @@ file { 'datanode postgresql.conf':
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/datanode/postgresql.conf.erb'),
-  subscribe => Exec['reload_db'],
   }->
 
 file { 'datanode pg_hba.conf':
@@ -50,6 +49,5 @@ file { 'datanode pg_hba.conf':
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/datanode/pg_hba.conf.erb'),
-  subscribe => Exec['reload_db'],
   }
 }

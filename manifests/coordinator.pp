@@ -24,21 +24,13 @@ $gtm_proxy            = $postgres_xc::params::gtm_proxy
 
 inherits postgres_xc::params {
 
+
 exec { 'initialisation coordinator':
   command => "/usr/bin/sudo -u ${super_user} initdb --nodename=${coordinator_name} -D ${home}/${coordinator_directory}",
   unless  => "/usr/bin/test -s ${home}/${coordinator_directory}/postgresql.conf",
   path    => [
     '/usr/local/bin',
     '/usr/bin'],
-  }->
-file { 'coordinator postgresql.conf':
-  ensure    => 'present',
-  path      => "${home}/${coordinator_directory}/postgresql.conf",
-  owner     => $super_user,
-  group     => $group,
-  mode      => '0640',
-  content   => template('postgres_xc/coordinator/postgresql.conf.erb'),
-  subscribe => Exec['reload_db'],
   }->
 
 file { 'coord pg_hba.conf':
@@ -48,7 +40,15 @@ file { 'coord pg_hba.conf':
   group     => $group,
   mode      => '0640',
   content   => template('postgres_xc/coordinator/pg_hba.conf.erb'),
-  require   => Exec ['initialisation coordinator'],
-  subscribe => Exec['reload_db'],
+  }->
+
+file { 'coordinator postgresql.conf':
+  ensure    => 'present',
+  path      => "${home}/${coordinator_directory}/postgresql.conf",
+  owner     => $super_user,
+  group     => $group,
+  mode      => '0640',
+  content   => template('postgres_xc/coordinator/postgresql.conf.erb'),
   }
 }
+

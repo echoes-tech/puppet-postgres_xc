@@ -169,7 +169,7 @@ class postgres_xc::params {
   $datanode_wal_directory   = 'datanode_arclog'
 
   $other_database_hostname  = ''
-  $other_database_ip        = 'd'
+  $other_database_ip        = ''
   $gtm_hostname             = 'gtm'
   $gtm_name                 = "${gtm_hostname}"
   $gtm_standby_hostname     = 'gtm2'
